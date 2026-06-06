@@ -1,9 +1,8 @@
 import { config, fields, collection, singleton, type Collection } from "@keystatic/core";
 import type { ComponentSchema } from "@keystatic/core";
-import fs from "node:fs";
+import catalog from "./src/data/fontCatalog.json";
+import settings from "./src/data/settings.json";
 
-const catalog = JSON.parse(fs.readFileSync("src/data/fontCatalog.json", "utf8"));
-const settings = JSON.parse(fs.readFileSync("src/data/settings.json", "utf8"));
 const template: string = settings.template ?? "blog";
 
 const fontOptions = Object.entries(catalog).map(([value, family]: [string, any]) => ({
