@@ -4,6 +4,7 @@ import catalog from "./src/data/fontCatalog.json";
 import settings from "./src/data/settings.json";
 
 const template: string = settings.template ?? "blog";
+const brandName: string = settings.name?.trim() || "Push Pop";
 
 const fontOptions = Object.entries(catalog).map(([value, family]: [string, any]) => ({
   label: (family as { label: string }).label,
@@ -159,6 +160,9 @@ const templateCollections: Record<string, Record<string, Collection<Record<strin
 
 export default config({
   storage: { kind: "local" },
+  ui: {
+    brand: { name: brandName },
+  },
   collections: {
     pages,
     ...(templateCollections[template] ?? {}),
