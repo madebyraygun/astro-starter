@@ -1,0 +1,10 @@
+---
+const { site, nav } = Astro.props;
+---
+<footer class="site-footer">
+  <nav>
+    {nav.map((item: any) => <a href={item.url}>{item.title}</a>)}
+    {site.extraLinks.map((link: any) => <a href={link.url}>{link.label}</a>)}
+  </nav>
+  {site.footerText && <p>{site.footerText}</p>}
+</footer>

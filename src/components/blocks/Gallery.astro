@@ -1,0 +1,6 @@
+---
+const { columns, images } = Astro.props;
+---
+<div class={`block-gallery cols-${columns ?? "3"}`}>
+  {(images ?? []).map((item: any) => item.image && <img src={item.image} alt={item.alt ?? ""} />)}
+</div>

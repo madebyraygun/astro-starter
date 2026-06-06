@@ -1,0 +1,12 @@
+---
+import { renderMarkdown } from "../../lib/markdown";
+const { items } = Astro.props;
+---
+<div class="block-faq">
+  {(items ?? []).map((item: any) => (
+    <details>
+      <summary>{item.question}</summary>
+      <div set:html={renderMarkdown(item.answer)} />
+    </details>
+  ))}
+</div>

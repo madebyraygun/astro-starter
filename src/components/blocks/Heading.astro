@@ -1,0 +1,5 @@
+---
+const { text, level } = Astro.props;
+const Tag = level === "3" ? "h3" : "h2";
+---
+<Tag class="block-heading">{text}</Tag>

@@ -1,0 +1,15 @@
+---
+import Heading from "./blocks/Heading.astro";
+import Text from "./blocks/Text.astro";
+import Image from "./blocks/Image.astro";
+import Gallery from "./blocks/Gallery.astro";
+import Faq from "./blocks/Faq.astro";
+import Cta from "./blocks/Cta.astro";
+
+const { blocks } = Astro.props;
+const components: Record<string, any> = { heading: Heading, text: Text, image: Image, gallery: Gallery, faq: Faq, cta: Cta };
+---
+{(blocks ?? []).map((block: any) => {
+  const Component = components[block.discriminant];
+  return Component ? <Component {...block.value} /> : null;
+})}

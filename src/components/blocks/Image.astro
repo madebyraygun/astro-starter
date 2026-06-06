@@ -1,0 +1,7 @@
+---
+const { image, alt, caption } = Astro.props;
+---
+<figure class="block-image">
+  {image && <img src={image} alt={alt ?? ""} />}
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

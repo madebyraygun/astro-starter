@@ -1,0 +1,12 @@
+---
+const { site, nav, currentPath } = Astro.props;
+---
+<header class="site-header">
+  <a class="site-name" href="/">{site.name}</a>
+  <nav>
+    {nav.map((item: any) => (
+      <a href={item.url} aria-current={item.url === currentPath ? "page" : undefined}>{item.title}</a>
+    ))}
+    {site.extraLinks.map((link: any) => <a href={link.url}>{link.label}</a>)}
+  </nav>
+</header>

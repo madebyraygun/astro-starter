@@ -1,0 +1,31 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { getSettings, getNavPages } from "../lib/site";
+// @ts-ignore
+import { designOverridesCss } from "../../lib/design-overrides.js";
+import fs from "node:fs";
+
+const { title } = Astro.props;
+const site = await getSettings();
+const nav = await getNavPages();
+const catalog = JSON.parse(fs.readFileSync("src/data/fontCatalog.json", "utf8"));
+const overridesCss = designOverridesCss(site.design, catalog);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title ? `${title} · ${site.name}` : site.name}</title>
+    <link rel="stylesheet" href="/assets/css/fonts.css" />
+    <link rel="stylesheet" href={`/assets/css/themes/${site.theme}.css`} />
+    {overridesCss && <style set:html={overridesCss} />}
+    <link rel="stylesheet" href="/assets/css/core.css" />
+  </head>
+  <body>
+    <Header site={site} nav={nav} currentPath={Astro.url.pathname} />
+    <main><slot /></main>
+    <Footer site={site} nav={nav} />
+  </body>
+</html>
