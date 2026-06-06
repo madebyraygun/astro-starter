@@ -15,10 +15,12 @@ export default defineConfig(
   skipKeystatic
     ? {
         output: 'static',
+        devToolbar: { enabled: false },
         integrations: [fontDownload(), markdoc()],
       }
     : {
         output: 'server',
+        devToolbar: { enabled: false },
         adapter: node({ mode: 'standalone' }),
         integrations: [fontDownload(), contentReload(), react(), markdoc(), keystatic()],
       }
