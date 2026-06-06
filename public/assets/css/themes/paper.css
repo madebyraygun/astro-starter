@@ -1,0 +1,13 @@
+:root {
+  --color-bg: #faf6ef;
+  --color-surface: #ffffff;
+  --color-text: #232020;
+  --color-muted: #6f6a62;
+  --color-accent: #9a2b2b;
+  --color-accent-contrast: #ffffff;
+  --font-display: "Lora", Georgia, serif;
+  --font-body: "Lora", Georgia, serif;
+  --radius: 4px;
+  --space-unit: 1.1rem;
+  --content-width: 44rem;
+}

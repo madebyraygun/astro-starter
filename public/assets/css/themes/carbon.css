@@ -1,0 +1,13 @@
+:root {
+  --color-bg: #131417;
+  --color-surface: #1d1f24;
+  --color-text: #ecedef;
+  --color-muted: #9aa0a8;
+  --color-accent: #a3e635;
+  --color-accent-contrast: #131417;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --radius: 6px;
+  --space-unit: 1rem;
+  --content-width: 46rem;
+}

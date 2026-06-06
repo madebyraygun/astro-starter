@@ -1,0 +1,8 @@
+{
+  "name": "New Site",
+  "template": "blog",
+  "theme": "paper",
+  "extraLinks": [],
+  "footerText": "",
+  "design": {}
+}
