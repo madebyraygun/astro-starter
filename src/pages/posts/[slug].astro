@@ -1,0 +1,23 @@
+---
+import Markdoc from "@markdoc/markdoc";
+import Base from "../../layouts/Base.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const { reader } = await import("../../lib/site");
+  const posts = (await (reader.collections as any).posts?.all()) ?? [];
+  return posts.map((p: any) => ({ params: { slug: p.slug }, props: { entry: p.entry } }));
+}
+
+const { entry } = Astro.props;
+const { node } = await entry.content();
+const html = Markdoc.renderers.html(Markdoc.transform(node));
+---
+<Base title={entry.title}>
+  <article>
+    <h1>{entry.title}</h1>
+    {entry.date && <time datetime={entry.date}>{new Date(entry.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</time>}
+    <div set:html={html} />
+  </article>
+</Base>

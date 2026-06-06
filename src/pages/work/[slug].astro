@@ -1,0 +1,28 @@
+---
+import Markdoc from "@markdoc/markdoc";
+import Base from "../../layouts/Base.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const { reader } = await import("../../lib/site");
+  const projects = (await (reader.collections as any).projects?.all()) ?? [];
+  return projects.map((p: any) => ({ params: { slug: p.slug }, props: { entry: p.entry } }));
+}
+
+const { entry } = Astro.props;
+const { node } = await entry.content();
+const html = Markdoc.renderers.html(Markdoc.transform(node));
+---
+<Base title={entry.title}>
+  <article>
+    <h1>{entry.title}</h1>
+    {entry.cover && <img src={entry.cover} alt={entry.title} />}
+    <div set:html={html} />
+    {entry.gallery?.length > 0 && (
+      <div class="block-gallery cols-3">
+        {entry.gallery.map((item: any) => item.image && <img src={item.image} alt={item.alt ?? ""} />)}
+      </div>
+    )}
+  </article>
+</Base>

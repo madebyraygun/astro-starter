@@ -1,0 +1,7 @@
+title: About
+navShow: true
+navOrder: 3
+blocks:
+  - discriminant: text
+    value:
+      body: Tell visitors about yourself and your practice.

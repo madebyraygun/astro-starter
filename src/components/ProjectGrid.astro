@@ -1,1 +1,15 @@
-<div />
+---
+import { reader } from "../lib/site";
+const projects = ((await (reader.collections as any).projects?.all()) ?? [])
+  .sort((a: any, b: any) => (a.entry.order ?? 99) - (b.entry.order ?? 99));
+---
+<ul class="project-grid">
+  {projects.map((p: any) => (
+    <li>
+      <a href={`/work/${p.slug}/`}>
+        {p.entry.cover && <img src={p.entry.cover} alt={p.entry.title} />}
+        {p.entry.title}
+      </a>
+    </li>
+  ))}
+</ul>

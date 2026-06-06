@@ -1,0 +1,7 @@
+title: About
+navShow: true
+navOrder: 3
+blocks:
+  - discriminant: text
+    value:
+      body: Tell your readers who you are.

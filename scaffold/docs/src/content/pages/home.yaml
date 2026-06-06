@@ -1,0 +1,19 @@
+title: Home
+navShow: true
+navOrder: 1
+blocks:
+  - discriminant: heading
+    value:
+      text: Documentation
+      level: "2"
+  - discriminant: text
+    value:
+      body: >-
+        Documentation site created with Push Pop. Edit pages and add new ones
+        from the app.
+  - discriminant: cta
+    value:
+      heading: ""
+      text: ""
+      label: Get started
+      url: /docs/getting-started/

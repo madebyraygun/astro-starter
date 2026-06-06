@@ -1,0 +1,18 @@
+title: Home
+navShow: true
+navOrder: 1
+blocks:
+  - discriminant: heading
+    value:
+      text: Selected work
+      level: "2"
+  - discriminant: text
+    value:
+      body: >-
+        A portfolio site created with Push Pop. Add projects from the app.
+  - discriminant: cta
+    value:
+      heading: ""
+      text: ""
+      label: View work
+      url: /work/

@@ -1,0 +1,26 @@
+---
+import Markdoc from "@markdoc/markdoc";
+import Base from "../../layouts/Base.astro";
+import DocsSidebar from "../../components/DocsSidebar.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const { reader } = await import("../../lib/site");
+  const docs = (await (reader.collections as any).docs?.all()) ?? [];
+  return docs.map((d: any) => ({ params: { slug: d.slug }, props: { entry: d.entry } }));
+}
+
+const { entry } = Astro.props;
+const { node } = await entry.content();
+const html = Markdoc.renderers.html(Markdoc.transform(node));
+---
+<Base title={entry.title}>
+  <div class="docs-layout">
+    <DocsSidebar currentPath={Astro.url.pathname} />
+    <div class="docs-content">
+      <h1>{entry.title}</h1>
+      <div set:html={html} />
+    </div>
+  </div>
+</Base>

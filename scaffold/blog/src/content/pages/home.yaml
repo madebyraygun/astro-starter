@@ -1,0 +1,19 @@
+title: Home
+navShow: true
+navOrder: 1
+blocks:
+  - discriminant: heading
+    value:
+      text: Welcome to your new blog
+      level: "2"
+  - discriminant: text
+    value:
+      body: >-
+        This site was created with Push Pop. Edit this page — and everything
+        else — from the app.
+  - discriminant: cta
+    value:
+      heading: ""
+      text: ""
+      label: Read the blog
+      url: /posts/

@@ -1,1 +1,7 @@
-<div />
+---
+import DocsSidebar from "./DocsSidebar.astro";
+---
+<div class="docs-layout">
+  <DocsSidebar currentPath={Astro.url.pathname} />
+  <div class="docs-content"><p>Choose a page from the sidebar.</p></div>
+</div>

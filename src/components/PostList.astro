@@ -1,1 +1,13 @@
-<div />
+---
+import { reader } from "../lib/site";
+const posts = ((await (reader.collections as any).posts?.all()) ?? [])
+  .sort((a: any, b: any) => String(b.entry.date ?? "").localeCompare(String(a.entry.date ?? "")));
+---
+<ul class="listing">
+  {posts.map((p: any) => (
+    <li>
+      <a href={`/posts/${p.slug}/`}>{p.entry.title}</a>
+      {p.entry.date && <time datetime={p.entry.date}>{new Date(p.entry.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</time>}
+    </li>
+  ))}
+</ul>
