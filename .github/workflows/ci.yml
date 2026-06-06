@@ -1,0 +1,30 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scaffold/check-themes.js
+      - run: node scaffold/check-fonts.js
+      - run: npm test
+
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        template: [blog, portfolio, docs]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scaffold/scaffold.js --template=${{ matrix.template }} --theme=paper
+      - run: npm ci
+      - run: npm run build
+      - run: test ! -d dist/keystatic
+      - run: "! grep -rqi 'react-dom' dist"
