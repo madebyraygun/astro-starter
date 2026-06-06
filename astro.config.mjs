@@ -14,7 +14,7 @@ export default defineConfig(
   skipKeystatic
     ? {
         output: 'static',
-        integrations: [fontDownload(), react(), markdoc()],
+        integrations: [fontDownload(), markdoc()],
       }
     : {
         output: 'server',
