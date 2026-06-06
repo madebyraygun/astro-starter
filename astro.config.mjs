@@ -4,6 +4,7 @@ import markdoc from '@astrojs/markdoc';
 import node from '@astrojs/node';
 import keystatic from '@keystatic/astro';
 import fontDownload from './integrations/font-download.js';
+import contentReload from './integrations/content-reload.js';
 
 // Keystatic's admin needs SSR, so dev runs the template's server setup.
 // Production builds skip the admin entirely: pure static output, no adapter,
@@ -19,6 +20,6 @@ export default defineConfig(
     : {
         output: 'server',
         adapter: node({ mode: 'standalone' }),
-        integrations: [fontDownload(), react(), markdoc(), keystatic()],
+        integrations: [fontDownload(), contentReload(), react(), markdoc(), keystatic()],
       }
 );
