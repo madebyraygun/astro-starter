@@ -1,0 +1,45 @@
+---
+import Base from "../layouts/Base.astro";
+
+export const prerender = true;
+---
+<Base title="Page not found">
+  <section class="not-found">
+    <p class="not-found__code">404</p>
+    <h1>Page not found</h1>
+    <p>Sorry, we couldn't find the page you were looking for. It may have moved or no longer exists.</p>
+    <a class="not-found__home" href="/">Back to homepage</a>
+  </section>
+</Base>
+
+<style>
+  .not-found {
+    text-align: center;
+    padding: calc(var(--space-unit) * 4) 0;
+  }
+  .not-found__code {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 12vw, 6rem);
+    line-height: 1;
+    margin: 0;
+    color: var(--color-muted);
+  }
+  .not-found h1 {
+    margin: var(--space-unit) 0 calc(var(--space-unit) * 0.5);
+  }
+  .not-found p {
+    color: var(--color-muted);
+    max-width: 36ch;
+    margin-inline: auto;
+  }
+  .not-found__home {
+    display: inline-block;
+    margin-top: calc(var(--space-unit) * 1.5);
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+    padding: calc(var(--space-unit) * 0.5) var(--space-unit);
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-weight: 700;
+  }
+</style>
