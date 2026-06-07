@@ -1,0 +1,29 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  basePath: string;
+}
+
+const { currentPage, totalPages, basePath } = Astro.props;
+
+// Older posts live on higher-numbered pages (sorted newest-first).
+const pageUrl = (n: number) => (n === 1 ? basePath : `${basePath}page/${n}/`);
+const newerUrl = currentPage > 1 ? pageUrl(currentPage - 1) : null;
+const olderUrl = currentPage < totalPages ? pageUrl(currentPage + 1) : null;
+---
+{totalPages > 1 && (
+  <nav class="pagination" aria-label="Pagination">
+    {newerUrl ? (
+      <a class="pagination-newer" href={newerUrl} rel="prev">← Newer</a>
+    ) : (
+      <span class="pagination-newer is-disabled" aria-hidden="true">← Newer</span>
+    )}
+    <span class="pagination-status">Page {currentPage} of {totalPages}</span>
+    {olderUrl ? (
+      <a class="pagination-older" href={olderUrl} rel="next">Older →</a>
+    ) : (
+      <span class="pagination-older is-disabled" aria-hidden="true">Older →</span>
+    )}
+  </nav>
+)}
