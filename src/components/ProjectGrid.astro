@@ -1,5 +1,6 @@
 ---
 import { reader } from "../lib/site";
+import Picture from "./Picture.astro";
 const projects = ((await (reader.collections as any).projects?.all()) ?? [])
   .sort((a: any, b: any) => (a.entry.order ?? 99) - (b.entry.order ?? 99));
 ---
@@ -7,7 +8,9 @@ const projects = ((await (reader.collections as any).projects?.all()) ?? [])
   {projects.map((p: any) => (
     <li>
       <a href={`/work/${p.slug}/`}>
-        {p.entry.cover && <img src={p.entry.cover} alt={p.entry.title} />}
+        {p.entry.cover && (
+          <Picture src={p.entry.cover} alt={p.entry.title} sizes="(max-width: 760px) 100vw, 360px" widths={[320, 640, 960]} />
+        )}
         {p.entry.title}
       </a>
     </li>

@@ -17,7 +17,8 @@ const optionalColor = (label: string) =>
     description: "Hex color, e.g. #336699. Leave empty for the theme default.",
   });
 
-const uploads = { directory: "public/uploads", publicPath: "/uploads/" };
+// src/assets (not public/) so astro:assets can optimize what Keystatic stores.
+const uploads = { directory: "src/assets/uploads", publicPath: "/src/assets/uploads/" };
 
 const blocks = fields.blocks(
   {
