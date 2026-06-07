@@ -1,6 +1,16 @@
 ---
+import Picture from "../Picture.astro";
+
 const { columns, images } = Astro.props;
+const cols = Number(columns ?? "3");
+const sizes = `(max-width: 760px) ${cols > 1 ? "50vw" : "100vw"}, ${Math.round(720 / cols)}px`;
 ---
+
 <div class={`block-gallery cols-${columns ?? "3"}`}>
-  {(images ?? []).map((item: any) => item.image && <img src={item.image} alt={item.alt ?? ""} />)}
+  {
+    (images ?? []).map(
+      (item: any) =>
+        item.image && <Picture src={item.image} alt={item.alt ?? ""} sizes={sizes} widths={[320, 640, 960]} />
+    )
+  }
 </div>

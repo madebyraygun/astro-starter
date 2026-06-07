@@ -9,8 +9,9 @@ export default function contentReload() {
         const shouldReload = (file) =>
           file.includes("/src/content/") ||
           file.endsWith("/src/data/settings.json") ||
+          file.includes("/src/assets/uploads/") ||
           file.includes("/public/uploads/");
-        server.watcher.add(["src/content", "src/data", "public/uploads"]);
+        server.watcher.add(["src/content", "src/data", "src/assets/uploads", "public/uploads"]);
         server.watcher.on("all", (_event, file) => {
           if (shouldReload(file)) {
             // Tell the prerender pipeline to clear its getStaticPaths cache so
