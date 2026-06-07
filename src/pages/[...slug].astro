@@ -1,7 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
 import Blocks from "../components/Blocks.astro";
-import PostList from "../components/PostList.astro";
 import ProjectGrid from "../components/ProjectGrid.astro";
 import DocsIndex from "../components/DocsIndex.astro";
 import { getSettings } from "../lib/site";
@@ -10,18 +9,23 @@ export const prerender = true;
 
 export async function getStaticPaths() {
   const { reader } = await import("../lib/site");
+  const settings = await reader.singletons.settings.read();
+  const template = settings?.template ?? "blog";
   const pages = await reader.collections.pages.all();
-  return pages.map((p) => ({
-    params: { slug: p.slug === "home" ? undefined : p.slug },
-    props: { slug: p.slug, entry: p.entry },
-  }));
+  // The posts index is served by src/pages/posts/[...page].astro (paginated);
+  // skip it here so the two routes do not collide on /posts/.
+  return pages
+    .filter((p) => !(template === "blog" && p.slug === "posts"))
+    .map((p) => ({
+      params: { slug: p.slug === "home" ? undefined : p.slug },
+      props: { slug: p.slug, entry: p.entry },
+    }));
 }
 
 const { slug, entry } = Astro.props;
 const site = await getSettings();
 const Listing =
-  site.template === "blog" && slug === "posts" ? PostList
-  : site.template === "portfolio" && slug === "work" ? ProjectGrid
+  site.template === "portfolio" && slug === "work" ? ProjectGrid
   : site.template === "docs" && slug === "docs" ? DocsIndex
   : null;
 ---

@@ -47,6 +47,12 @@ main { max-width: var(--content-width); margin: 0 auto; padding: calc(var(--spac
 .project-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-unit); list-style: none; padding: 0; }
 .project-grid a { text-decoration: none; color: var(--color-text); }
 
+/* Pagination */
+.pagination { display: flex; align-items: center; justify-content: space-between; gap: var(--space-unit); margin-top: calc(var(--space-unit) * 2); }
+.pagination a { color: var(--color-accent); text-decoration: none; font-weight: 700; }
+.pagination .is-disabled { color: var(--color-muted); }
+.pagination-status { color: var(--color-muted); font-size: 0.9rem; }
+
 /* Docs layout */
 .docs-layout { display: flex; gap: calc(var(--space-unit) * 2); max-width: calc(var(--content-width) + 16rem); margin: 0 auto; padding: var(--space-unit); }
 .docs-sidebar { flex: 0 0 13rem; }

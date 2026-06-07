@@ -1,7 +1,13 @@
 ---
 import { reader } from "../lib/site";
-const posts = ((await (reader.collections as any).posts?.all()) ?? [])
+
+interface Props {
+  posts?: any[];
+}
+
+const fetched = ((await (reader.collections as any).posts?.all()) ?? [])
   .sort((a: any, b: any) => String(b.entry.date ?? "").localeCompare(String(a.entry.date ?? "")));
+const posts = Astro.props.posts ?? fetched;
 ---
 <ul class="listing">
   {posts.map((p: any) => (

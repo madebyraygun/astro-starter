@@ -1,0 +1,53 @@
+---
+import Base from "../../layouts/Base.astro";
+import Blocks from "../../components/Blocks.astro";
+import PostList from "../../components/PostList.astro";
+import Pagination from "../../components/Pagination.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const PAGE_SIZE = 10;
+  const { reader } = await import("../../lib/site");
+
+  const settings = await reader.singletons.settings.read();
+  // Only the blog template has a posts index; other templates have no /posts/ route.
+  if ((settings?.template ?? "blog") !== "blog") return [];
+
+  const posts = ((await (reader.collections as any).posts?.all()) ?? [])
+    .sort((a: any, b: any) =>
+      String(b.entry.date ?? "").localeCompare(String(a.entry.date ?? "")));
+
+  const indexPage = await reader.collections.pages.read("posts");
+
+  const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
+
+  return Array.from({ length: totalPages }, (_, i) => {
+    const pageNumber = i + 1;
+    const start = i * PAGE_SIZE;
+    return {
+      // First page lives at /posts/, the rest at /posts/page/N/.
+      params: { page: pageNumber === 1 ? undefined : `page/${pageNumber}` },
+      props: {
+        posts: posts.slice(start, start + PAGE_SIZE),
+        title: indexPage?.title ?? "Posts",
+        blocks: indexPage?.blocks ?? [],
+        currentPage: pageNumber,
+        totalPages,
+      },
+    };
+  });
+}
+
+const { posts, title, blocks, currentPage, totalPages } = Astro.props;
+---
+<Base title={title}>
+  <h1>{title}</h1>
+  <Blocks blocks={blocks} />
+  <PostList posts={posts} />
+  <Pagination
+    currentPage={currentPage}
+    totalPages={totalPages}
+    basePath="/posts/"
+  />
+</Base>
