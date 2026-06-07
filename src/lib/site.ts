@@ -11,6 +11,8 @@ export async function getSettings() {
     theme: s?.theme || "paper",
     extraLinks: s?.extraLinks ?? [],
     footerText: s?.footerText || "",
+    siteUrl: s?.siteUrl?.trim() || "",
+    rssEnabled: s?.rssEnabled ?? true,
     design: (s?.design ?? {}) as Record<string, unknown>,
   };
 }

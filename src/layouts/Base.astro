@@ -11,6 +11,9 @@ const site = await getSettings();
 const nav = await getNavPages();
 const catalog = JSON.parse(fs.readFileSync("src/data/fontCatalog.json", "utf8"));
 const overridesCss = designOverridesCss(site.design, catalog);
+// RSS feed is emitted at /posts/rss.xml only when enabled and a Site URL is set
+// (see src/pages/posts/[file].xml.ts). Mirror that condition for the head link.
+const rssEnabled = site.rssEnabled && Boolean(site.siteUrl) && site.template === "blog";
 ---
 <!doctype html>
 <html lang="en">
@@ -22,6 +25,14 @@ const overridesCss = designOverridesCss(site.design, catalog);
     <link rel="stylesheet" href={`/assets/css/themes/${site.theme}.css`} />
     {overridesCss && <style set:html={overridesCss} />}
     <link rel="stylesheet" href="/assets/css/core.css" />
+    {rssEnabled && (
+      <link
+        rel="alternate"
+        type="application/rss+xml"
+        title={`${site.name} — Posts`}
+        href="/posts/rss.xml"
+      />
+    )}
   </head>
   <body>
     <Header site={site} nav={nav} currentPath={Astro.url.pathname} />

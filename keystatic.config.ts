@@ -174,6 +174,17 @@ export default config({
       format: { data: "json" },
       schema: {
         name: fields.text({ label: "Site name" }),
+        siteUrl: fields.text({
+          label: "Site URL",
+          description:
+            "Full public URL of the site, e.g. https://example.com. Required for RSS feed links.",
+        }),
+        rssEnabled: fields.checkbox({
+          label: "RSS feed",
+          description:
+            "Publish an RSS feed for posts at /posts/rss.xml. Requires a Site URL.",
+          defaultValue: true,
+        }),
         template: fields.text({ label: "Template" }),
         theme: fields.select({
           label: "Theme",
