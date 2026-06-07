@@ -5,6 +5,7 @@ import node from '@astrojs/node';
 import keystatic from '@keystatic/astro';
 import fontDownload from './integrations/font-download.js';
 import contentReload from './integrations/content-reload.js';
+import draftOverlay from './integrations/draft-overlay.js';
 
 // Keystatic's admin needs SSR, so dev runs the template's server setup.
 // Production builds skip the admin entirely: pure static output, no adapter,
@@ -29,6 +30,9 @@ export default defineConfig(
           '/admin': '/keystatic',
           '/admin/[...path]': '/keystatic/[...path]',
         },
-        integrations: [fontDownload(), contentReload(), react(), markdoc(), keystatic()],
+        integrations: [fontDownload(), contentReload(), draftOverlay(), react(), markdoc(), keystatic()],
+        // Draft writes land under .pushpop/; keep Vite's watcher off them so a
+        // draft never triggers an HMR full-reload of the admin page.
+        vite: { server: { watch: { ignored: ['**/.pushpop/**'] } } },
       }
 );

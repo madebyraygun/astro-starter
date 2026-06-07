@@ -9,7 +9,8 @@
     "build": "SKIP_KEYSTATIC=1 astro build",
     "deploy": "bash deploy.sh",
     "deploy:dry": "bash deploy.sh --dry-run",
-    "test": "node --test scaffold/*.test.js"
+    "test": "node --test scaffold/*.test.js",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@astrojs/markdoc": "^1.0.3",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.9.2",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "patch-package": "^8.0.1"
   }
 }
