@@ -20,3 +20,7 @@ deploy.env
 
 # macOS-specific files
 .DS_Store
+
+# push pop drafts (dev-only)
+.pushpop/*
+!.pushpop/agent.md
