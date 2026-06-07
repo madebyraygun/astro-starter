@@ -2,6 +2,7 @@
 import Markdoc from "@markdoc/markdoc";
 import Base from "../../layouts/Base.astro";
 import Picture from "../../components/Picture.astro";
+import Gallery from "../../components/blocks/Gallery.astro";
 
 export const prerender = true;
 
@@ -20,20 +21,6 @@ const html = Markdoc.renderers.html(Markdoc.transform(node));
     <h1>{entry.title}</h1>
     {entry.cover && <Picture src={entry.cover} alt={entry.title} />}
     <div set:html={html} />
-    {entry.gallery?.length > 0 && (
-      <div class="block-gallery cols-3">
-        {entry.gallery.map(
-          (item: any) =>
-            item.image && (
-              <Picture
-                src={item.image}
-                alt={item.alt ?? ""}
-                sizes="(max-width: 760px) 50vw, 240px"
-                widths={[320, 640, 960]}
-              />
-            )
-        )}
-      </div>
-    )}
+    {entry.gallery?.length > 0 && <Gallery columns="3" images={entry.gallery} />}
   </article>
 </Base>

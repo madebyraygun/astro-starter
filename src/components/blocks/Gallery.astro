@@ -1,16 +1,63 @@
 ---
 import Picture from "../Picture.astro";
+import { picture } from "../../lib/images";
 
 const { columns, images } = Astro.props;
 const cols = Number(columns ?? "3");
 const sizes = `(max-width: 760px) ${cols > 1 ? "50vw" : "100vw"}, ${Math.round(720 / cols)}px`;
+const items = await Promise.all(
+  (images ?? [])
+    .filter((item: any) => item.image)
+    .map(async (item: any) => ({
+      image: item.image,
+      alt: item.alt ?? "",
+      full: (await picture(item.image))?.full ?? null,
+    }))
+);
 ---
 
 <div class={`block-gallery cols-${columns ?? "3"}`}>
   {
-    (images ?? []).map(
-      (item: any) =>
-        item.image && <Picture src={item.image} alt={item.alt ?? ""} sizes={sizes} widths={[320, 640, 960]} />
+    items.map((item) =>
+      item.full ? (
+        <a
+          href={item.full.src}
+          data-pswp
+          data-pswp-width={item.full.width}
+          data-pswp-height={item.full.height}
+          data-pswp-caption={item.alt || undefined}
+        >
+          <Picture src={item.image} alt={item.alt} sizes={sizes} widths={[320, 640, 960]} />
+        </a>
+      ) : (
+        <Picture src={item.image} alt={item.alt} sizes={sizes} widths={[320, 640, 960]} />
+      )
     )
   }
 </div>
+
+<script>
+  import PhotoSwipeLightbox from "photoswipe/lightbox";
+  import "photoswipe/style.css";
+
+  const lightbox = new PhotoSwipeLightbox({
+    gallery: ".block-gallery",
+    children: "a[data-pswp]",
+    pswpModule: () => import("photoswipe"),
+  });
+  lightbox.on("uiRegister", () => {
+    lightbox.pswp?.ui?.registerElement({
+      name: "caption",
+      order: 9,
+      isButton: false,
+      appendTo: "root",
+      onInit: (el) => {
+        lightbox.pswp?.on("change", () => {
+          const a = lightbox.pswp?.currSlide?.data?.element;
+          el.innerHTML = a ? a.getAttribute("data-pswp-caption") || "" : "";
+        });
+      },
+    });
+  });
+  lightbox.init();
+</script>

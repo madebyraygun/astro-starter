@@ -10,6 +10,7 @@ const modules = import.meta.glob<{ default: ImageMetadata }>(
 export interface Picture {
   sources: { type: string; srcset: string }[];
   fallback: { src: string; width: number; height: number };
+  full: { src: string; width: number; height: number };
 }
 
 const FORMATS = ["avif", "webp", "jpeg"] as const;
@@ -34,12 +35,19 @@ export async function picture(
     sources.push({ type: `image/${format}`, srcset: img.srcSet.attribute });
   }
   const small = await getImage({ src: meta, width: usable[0], format: "jpeg" });
+  const fullWidth = Math.min(2000, meta.width);
+  const large = await getImage({ src: meta, width: fullWidth, format: "jpeg" });
   return {
     sources,
     fallback: {
       src: small.src,
       width: usable[0],
       height: Math.round((meta.height * usable[0]) / meta.width),
+    },
+    full: {
+      src: large.src,
+      width: fullWidth,
+      height: Math.round((meta.height * fullWidth) / meta.width),
     },
   };
 }
