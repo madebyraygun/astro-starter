@@ -22,6 +22,13 @@ export default defineConfig(
         output: 'server',
         devToolbar: { enabled: false },
         adapter: node({ mode: 'standalone' }),
+        // Keystatic's admin lives at /keystatic and its client-side router
+        // hardcodes that prefix, so the mount point can't be moved. Expose a
+        // tool-agnostic /admin entry point that redirects to it instead.
+        redirects: {
+          '/admin': '/keystatic',
+          '/admin/[...path]': '/keystatic/[...path]',
+        },
         integrations: [fontDownload(), contentReload(), react(), markdoc(), keystatic()],
       }
 );
