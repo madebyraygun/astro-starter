@@ -1,0 +1,64 @@
+diff --git a/node_modules/@keystatic/core/dist/keystatic-core-ui.js b/node_modules/@keystatic/core/dist/keystatic-core-ui.js
+index 24d4713..50868d2 100644
+--- a/node_modules/@keystatic/core/dist/keystatic-core-ui.js
++++ b/node_modules/@keystatic/core/dist/keystatic-core-ui.js
+@@ -3483,8 +3483,10 @@ function LocalItemPage(props) {
+           version: 1
+         };
+         setDraft(key, data);
++        __pushpopEmitDraft(key, files);
+       } else {
+         delDraft(key);
++        __pushpopEmitDraft(key, null);
+       }
+     };
+     $[31] = collection;
+@@ -4968,8 +4970,10 @@ function CreateItemLocal(props) {
+           version: 1
+         };
+         setDraft(key, data);
++        __pushpopEmitDraft(key, files);
+       } else {
+         delDraft(key);
++        __pushpopEmitDraft(key, null);
+       }
+     };
+     $[28] = props.collection;
+@@ -7023,8 +7027,10 @@ function LocalSingletonPage(props) {
+           version: 1
+         };
+         setDraft(key, data);
++        __pushpopEmitDraft(key, files);
+       } else {
+         delDraft(key);
++        __pushpopEmitDraft(key, null);
+       }
+     };
+     $[8] = singleton;
+@@ -8533,3 +8539,26 @@ function ClientOnly(props) {
+ }
+ 
+ export { Keystatic };
++
++// Push Pop draft bridge: mirror Keystatic's own draft persistence as a
++// window message so a host (or preview frame) can render unsaved state.
++function __pushpopEmitDraft(key, files) {
++  try {
++    if (typeof window === "undefined") return;
++    window.postMessage({
++      type: "keystatic.draft",
++      key: key,
++      files: files
++        ? Array.from(files, function (entry) {
++            return { path: entry[0], contents: __pushpopB64(entry[1]) };
++          })
++        : null
++    }, "*");
++  } catch (err) {}
++}
++function __pushpopB64(bytes) {
++  var arr = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
++  var s = "";
++  for (var i = 0; i < arr.length; i++) s += String.fromCharCode(arr[i]);
++  return btoa(s);
++}
