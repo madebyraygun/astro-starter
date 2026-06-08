@@ -5,11 +5,14 @@ body {
   color: var(--color-text);
   font-family: var(--font-body);
   line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.2; }
 a { color: var(--color-accent); }
 img { max-width: 100%; height: auto; display: block; border-radius: var(--radius); }
-main { max-width: var(--content-width); margin: 0 auto; padding: calc(var(--space-unit) * 2) var(--space-unit) calc(var(--space-unit) * 4); }
+main { max-width: var(--content-width); margin: 0 auto; padding: calc(var(--space-unit) * 2) var(--space-unit) calc(var(--space-unit) * 4); flex: 1 0 auto; }
 
 /* Header / footer */
 .site-header, .site-footer {
@@ -19,6 +22,28 @@ main { max-width: var(--content-width); margin: 0 auto; padding: calc(var(--spac
   padding: var(--space-unit);
 }
 .site-name { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; color: var(--color-text); text-decoration: none; }
+.site-brand { display: inline-flex; align-items: center; text-decoration: none; }
+.site-brand :where(img) { max-height: 2.5rem; width: auto; border-radius: 0; }
+.site-header.brand-center { justify-content: center; }
+.site-header.brand-right { flex-direction: row-reverse; }
+
+.site-footer .footer-nav, .site-footer .footer-social { display: flex; flex-wrap: wrap; gap: calc(var(--space-unit) * 0.75); }
+.footer-signup { display: flex; flex-direction: column; gap: calc(var(--space-unit) * 0.5); }
+.footer-signup-heading { margin: 0; }
+.footer-signup form { display: flex; flex-wrap: wrap; gap: calc(var(--space-unit) * 0.5); }
+.footer-signup input[type="email"] {
+  flex: 1 1 12rem; min-width: 0;
+  padding: calc(var(--space-unit) * 0.5);
+  border: 1px solid var(--color-muted); border-radius: var(--radius);
+  background: var(--color-bg); color: var(--color-text);
+}
+.footer-signup button {
+  background: var(--color-accent); color: var(--color-accent-contrast);
+  border: 0; border-radius: var(--radius); font-weight: 700; cursor: pointer;
+  padding: calc(var(--space-unit) * 0.5) var(--space-unit);
+}
+.footer-credit { font-size: 0.9rem; color: var(--color-muted); }
+.footer-credit :first-child { margin: 0; }
 .site-header nav, .site-footer nav { display: flex; flex-wrap: wrap; gap: calc(var(--space-unit) * 0.75); }
 .site-header nav a, .site-footer nav a { color: var(--color-text); text-decoration: none; }
 .site-header nav a[aria-current="page"] { color: var(--color-accent); }
