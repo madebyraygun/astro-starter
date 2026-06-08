@@ -11,12 +11,15 @@ test("content drafts are allowed", () => {
   assert.ok(p.endsWith(path.join("src", "content", "pages", "home.yaml")));
 });
 
-test("the settings singleton is allowed (live design-token preview)", () => {
-  const p = safeDraftPath("src/data/settings.json");
-  assert.ok(p && p.endsWith(path.join("src", "data", "settings.json")));
+test("the singleton files are allowed (live preview)", () => {
+  for (const p of ["src/data/site.json", "src/data/design.json", "src/data/navigation.json"]) {
+    const r = safeDraftPath(p);
+    assert.ok(r && r.endsWith(p.replace(/\//g, path.sep)), p);
+  }
 });
 
 test("other paths are rejected", () => {
+  assert.strictEqual(safeDraftPath("src/data/settings.json"), null);
   assert.strictEqual(safeDraftPath("src/data/other.json"), null);
   assert.strictEqual(safeDraftPath("package.json"), null);
   assert.strictEqual(safeDraftPath(123), null);

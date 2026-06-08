@@ -1,10 +1,10 @@
 import { config, fields, collection, singleton, type Collection } from "@keystatic/core";
 import type { ComponentSchema } from "@keystatic/core";
-import settings from "./src/data/settings.json";
+import site from "./src/data/site.json";
 import { colorField, fontField, themeField, headingsField } from "./src/keystatic/fields";
 
-const template: string = settings.template ?? "blog";
-const brandName: string = settings.name?.trim() || "Push Pop";
+const template: string = site.template ?? "blog";
+const brandName: string = site.name?.trim() || "Push Pop";
 
 const alignField = () =>
   fields.select({
@@ -281,9 +281,9 @@ export default config({
     ...(templateCollections[template] ?? {}),
   },
   singletons: {
-    settings: singleton({
-      label: "Site Settings",
-      path: "src/data/settings",
+    site: singleton({
+      label: "Site",
+      path: "src/data/site",
       format: { data: "json" },
       schema: {
         name: fields.text({ label: "Site name" }),
@@ -299,6 +299,13 @@ export default config({
           defaultValue: true,
         }),
         template: fields.text({ label: "Template" }),
+      },
+    }),
+    design: singleton({
+      label: "Design",
+      path: "src/data/design",
+      format: { data: "json" },
+      schema: {
         theme: themeField(),
         logo: fields.image({ label: "Logo", ...uploads }),
         logoAlign: fields.select({
@@ -309,46 +316,6 @@ export default config({
             { label: "Right", value: "right" },
           ],
           defaultValue: "",
-        }),
-        headerNav: fields.array(
-          fields.object({
-            label: fields.text({ label: "Label" }),
-            url: fields.text({ label: "URL" }),
-          }),
-          { label: "Header menu", itemLabel: (props) => props.fields.label.value }
-        ),
-        footerNav: fields.array(
-          fields.object({
-            label: fields.text({ label: "Label" }),
-            url: fields.text({ label: "URL" }),
-          }),
-          { label: "Footer menu", itemLabel: (props) => props.fields.label.value }
-        ),
-        signup: fields.object(
-          {
-            heading: fields.text({ label: "Signup heading" }),
-            actionUrl: fields.text({
-              label: "Signup form action URL",
-              description:
-                "POST endpoint from your email provider (Mailchimp, Buttondown, etc.). Leave empty to hide the form.",
-            }),
-            buttonLabel: fields.text({ label: "Button label", defaultValue: "Sign up" }),
-            placeholder: fields.text({ label: "Email placeholder", defaultValue: "Email address" }),
-          },
-          { label: "Email signup" }
-        ),
-        socialLinks: fields.array(
-          fields.object({
-            label: fields.text({ label: "Label" }),
-            url: fields.text({ label: "URL" }),
-          }),
-          { label: "Social links", itemLabel: (props) => props.fields.label.value }
-        ),
-        footerText: fields.text({
-          label: "Footer credit line",
-          description:
-            "Supports Markdown, e.g. ©2026 Hi-Res — a project of [Raygun](https://…).",
-          multiline: true,
         }),
         design: fields.object(
           {
@@ -396,6 +363,53 @@ export default config({
           },
           { label: "Customize Design" }
         ),
+      },
+    }),
+    navigation: singleton({
+      label: "Navigation",
+      path: "src/data/navigation",
+      format: { data: "json" },
+      schema: {
+        headerNav: fields.array(
+          fields.object({
+            label: fields.text({ label: "Label" }),
+            url: fields.text({ label: "URL" }),
+          }),
+          { label: "Header menu", itemLabel: (props) => props.fields.label.value }
+        ),
+        footerNav: fields.array(
+          fields.object({
+            label: fields.text({ label: "Label" }),
+            url: fields.text({ label: "URL" }),
+          }),
+          { label: "Footer menu", itemLabel: (props) => props.fields.label.value }
+        ),
+        signup: fields.object(
+          {
+            heading: fields.text({ label: "Signup heading" }),
+            actionUrl: fields.text({
+              label: "Signup form action URL",
+              description:
+                "POST endpoint from your email provider (Mailchimp, Buttondown, etc.). Leave empty to hide the form.",
+            }),
+            buttonLabel: fields.text({ label: "Button label", defaultValue: "Sign up" }),
+            placeholder: fields.text({ label: "Email placeholder", defaultValue: "Email address" }),
+          },
+          { label: "Email signup" }
+        ),
+        socialLinks: fields.array(
+          fields.object({
+            label: fields.text({ label: "Label" }),
+            url: fields.text({ label: "URL" }),
+          }),
+          { label: "Social links", itemLabel: (props) => props.fields.label.value }
+        ),
+        footerText: fields.text({
+          label: "Footer credit line",
+          description:
+            "Supports Markdown, e.g. ©2026 Hi-Res — a project of [Raygun](https://…).",
+          multiline: true,
+        }),
       },
     }),
   },

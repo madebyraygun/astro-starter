@@ -22,15 +22,16 @@ function scaffold(dir, args) {
   });
 }
 
-test("scaffolds blog: seeds pages and posts, writes settings.json, removes scaffold/", () => {
+test("scaffolds blog: seeds pages and posts, writes site.json and design.json, removes scaffold/", () => {
   const dir = freshCopy();
   execFileSync("node", [path.join(dir, "scaffold", "scaffold.js"), "--template=blog", "--theme=carbon"]);
   assert.ok(fs.existsSync(path.join(dir, "src/content/pages/home.yaml")));
   assert.ok(fs.existsSync(path.join(dir, "src/content/pages/posts.yaml")));
   assert.ok(fs.existsSync(path.join(dir, "src/content/posts/welcome.mdoc")));
-  const settings = JSON.parse(fs.readFileSync(path.join(dir, "src/data/settings.json"), "utf8"));
-  assert.strictEqual(settings.template, "blog");
-  assert.strictEqual(settings.theme, "carbon");
+  const site = JSON.parse(fs.readFileSync(path.join(dir, "src/data/site.json"), "utf8"));
+  const design = JSON.parse(fs.readFileSync(path.join(dir, "src/data/design.json"), "utf8"));
+  assert.strictEqual(site.template, "blog");
+  assert.strictEqual(design.theme, "carbon");
   assert.ok(!fs.existsSync(path.join(dir, "scaffold")));
 });
 
@@ -63,19 +64,19 @@ test("refuses to run against an already-scaffolded project", () => {
   assert.match(r.stderr, /already scaffolded/);
 });
 
-test("applies --name to settings.json", () => {
+test("applies --name to site.json", () => {
   const dir = freshCopy();
   execFileSync("node", [
     path.join(dir, "scaffold", "scaffold.js"),
     "--template=blog", "--theme=paper", "--name=Dalton's Blog & More",
   ]);
-  const settings = JSON.parse(fs.readFileSync(path.join(dir, "src/data/settings.json"), "utf8"));
-  assert.strictEqual(settings.name, "Dalton's Blog & More");
+  const site = JSON.parse(fs.readFileSync(path.join(dir, "src/data/site.json"), "utf8"));
+  assert.strictEqual(site.name, "Dalton's Blog & More");
 });
 
 test("keeps default name when --name omitted", () => {
   const dir = freshCopy();
   execFileSync("node", [path.join(dir, "scaffold", "scaffold.js"), "--template=blog", "--theme=paper"]);
-  const settings = JSON.parse(fs.readFileSync(path.join(dir, "src/data/settings.json"), "utf8"));
-  assert.strictEqual(settings.name, "New Site");
+  const site = JSON.parse(fs.readFileSync(path.join(dir, "src/data/site.json"), "utf8"));
+  assert.strictEqual(site.name, "New Site");
 });

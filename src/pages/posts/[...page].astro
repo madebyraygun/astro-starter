@@ -10,7 +10,7 @@ export async function getStaticPaths() {
   const PAGE_SIZE = 10;
   const { reader } = await import("../../lib/site");
 
-  const settings = await reader.singletons.settings.read();
+  const settings = await reader.singletons.site.read();
   // Only the blog template has a posts index; other templates have no /posts/ route.
   if ((settings?.template ?? "blog") !== "blog") return [];
 

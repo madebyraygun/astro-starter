@@ -8,7 +8,7 @@ export default function fontDownload() {
     name: "pushpop-font-download",
     hooks: {
       "astro:config:setup": async () => {
-        const settings = JSON.parse(fs.readFileSync("src/data/settings.json", "utf8"));
+        const settings = JSON.parse(fs.readFileSync("src/data/design.json", "utf8"));
         const catalog = JSON.parse(fs.readFileSync("src/data/fontCatalog.json", "utf8"));
         await downloadMissingFonts(settings.design || {}, catalog, "public/assets/fonts");
       },
