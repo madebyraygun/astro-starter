@@ -26,6 +26,25 @@ test("numbers get units, including zero", () => {
   assert.match(css, /--content-width: 60rem;/);
 });
 
+test("heading typography tokens emit with correct units", () => {
+  const css = designOverridesCss(
+    { headingScale: 1.5, headingTracking: 0.12, headingTransform: "uppercase" },
+    CATALOG
+  );
+  assert.match(css, /--heading-scale: 1.5;/);
+  assert.match(css, /--heading-tracking: 0.12em;/);
+  assert.match(css, /--heading-transform: uppercase;/);
+});
+
+test("zero heading tracking still emits", () => {
+  const css = designOverridesCss({ headingTracking: 0 }, CATALOG);
+  assert.match(css, /--heading-tracking: 0em;/);
+});
+
+test("empty heading transform is skipped", () => {
+  assert.strictEqual(designOverridesCss({ headingTransform: "" }, CATALOG), "");
+});
+
 test("fonts resolve to catalog stacks", () => {
   const css = designOverridesCss({ fontDisplay: "inter" }, CATALOG);
   assert.match(css, /--font-display: "Inter", system-ui, sans-serif;/);

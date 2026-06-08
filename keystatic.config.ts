@@ -17,6 +17,28 @@ const optionalColor = (label: string) =>
     description: "Hex color, e.g. #336699. Leave empty for the theme default.",
   });
 
+const alignField = () =>
+  fields.select({
+    label: "Alignment",
+    options: [
+      { label: "Left", value: "" },
+      { label: "Center", value: "center" },
+      { label: "Right", value: "right" },
+    ],
+    defaultValue: "",
+  });
+
+const backgroundField = () =>
+  fields.select({
+    label: "Background",
+    options: [
+      { label: "None", value: "" },
+      { label: "Surface", value: "surface" },
+      { label: "Accent", value: "accent" },
+    ],
+    defaultValue: "",
+  });
+
 // src/assets (not public/) so astro:assets can optimize what Keystatic stores.
 const uploads = { directory: "src/assets/uploads", publicPath: "/src/assets/uploads/" };
 
@@ -34,12 +56,25 @@ const blocks = fields.blocks(
           ],
           defaultValue: "2",
         }),
+        style: fields.select({
+          label: "Style",
+          options: [
+            { label: "Heading", value: "" },
+            { label: "Display (large)", value: "display" },
+            { label: "Eyebrow (small caps)", value: "eyebrow" },
+          ],
+          defaultValue: "",
+        }),
+        align: alignField(),
+        background: backgroundField(),
       }),
     },
     text: {
       label: "Text",
       schema: fields.object({
         body: fields.text({ label: "Body", multiline: true }),
+        align: alignField(),
+        background: backgroundField(),
       }),
     },
     image: {
@@ -90,6 +125,7 @@ const blocks = fields.blocks(
         text: fields.text({ label: "Text" }),
         label: fields.text({ label: "Button label" }),
         url: fields.text({ label: "Button URL" }),
+        background: backgroundField(),
       }),
     },
   },
@@ -234,6 +270,26 @@ export default config({
             contentWidth: fields.number({
               label: "Content width (rem)",
               validation: { min: 30, max: 80 },
+            }),
+            headingScale: fields.number({
+              label: "Heading size scale",
+              description:
+                "Multiplies block heading sizes. 1 = theme default; try 1.5 for large display headings.",
+              validation: { min: 0.75, max: 3 },
+            }),
+            headingTracking: fields.number({
+              label: "Heading letter-spacing (em)",
+              description: "Tracking for block headings, e.g. 0.12. Leave empty for the theme default.",
+              validation: { min: -0.05, max: 0.5 },
+            }),
+            headingTransform: fields.select({
+              label: "Heading text case",
+              options: [
+                { label: "Theme default", value: "" },
+                { label: "None", value: "none" },
+                { label: "Uppercase", value: "uppercase" },
+              ],
+              defaultValue: "",
             }),
           },
           { label: "Customize Design" }
