@@ -62,12 +62,16 @@ export default function draftOverlay() {
   };
 }
 
-// Drafts may only land inside the overlay's content mirror or be the site
-// settings singleton (so design-token edits live-preview pre-save).
-const SETTINGS_DRAFT_PATH = "src/data/settings.json";
+// Drafts may only land inside the overlay's content mirror or be one of the
+// settings singleton files (so design-token edits live-preview pre-save).
+const SINGLETON_DRAFT_PATHS = new Set([
+  "src/data/site.json",
+  "src/data/design.json",
+  "src/data/navigation.json",
+]);
 export function safeDraftPath(relative) {
   if (typeof relative !== "string") return null;
-  const allowed = relative.startsWith("src/content/") || relative === SETTINGS_DRAFT_PATH;
+  const allowed = relative.startsWith("src/content/") || SINGLETON_DRAFT_PATHS.has(relative);
   if (!allowed) return null;
   const target = path.resolve(DRAFT_ROOT, relative);
   return target.startsWith(path.resolve(DRAFT_ROOT) + path.sep) ? target : null;
