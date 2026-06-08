@@ -2,6 +2,8 @@ import React from "react";
 import { fields } from "@keystatic/core";
 import catalog from "../data/fontCatalog.json";
 import { setTheme, useThemeTokens } from "./themeStore";
+// @ts-ignore - framework-free JS helper
+import { firstFamily } from "../../lib/theme-tokens.js";
 
 // Custom Keystatic admin fields. Each spreads a base text/select field (keeping
 // Keystatic's string parse/serialize/reader plumbing) and overrides only the
@@ -97,10 +99,11 @@ function ensureAdminFonts() {
 
 const stackFor = (value: string) => (value && FONTS[value] ? FONTS[value].stack : undefined);
 
-function makeFontInput(label: string, options: Option[]) {
+function makeFontInput(label: string, options: Option[], role: "display" | "body") {
   return function FontInput({ value, onChange }: InputProps) {
     const [open, setOpen] = React.useState(false);
     const ref = React.useRef<HTMLDivElement>(null);
+    const tokens = useThemeTokens();
     React.useEffect(() => {
       ensureAdminFonts();
     }, []);
@@ -112,7 +115,13 @@ function makeFontInput(label: string, options: Option[]) {
       document.addEventListener("mousedown", onDown);
       return () => document.removeEventListener("mousedown", onDown);
     }, [open]);
-    const current = options.find((o) => o.value === value) ?? options[0];
+
+    const themeStack = tokens?.[`--font-${role}`];
+    const themeFamily = firstFamily(themeStack ?? "");
+    const defaultLabel = themeFamily ? `${themeFamily} (theme default)` : "Theme default";
+    const triggerLabel = value ? (options.find((o) => o.value === value)?.label ?? value) : defaultLabel;
+    const triggerStack = value ? stackFor(value) : themeStack || undefined;
+
     return (
       <FieldShell label={label}>
         <div ref={ref} style={{ position: "relative", maxWidth: 360 }}>
@@ -121,29 +130,34 @@ function makeFontInput(label: string, options: Option[]) {
             aria-haspopup="listbox"
             aria-expanded={open}
             onClick={() => setOpen((o) => !o)}
-            style={{ width: "100%", textAlign: "left", padding: "7px 9px", border: "1px solid #cbced4", borderRadius: 6, background: "none", cursor: "pointer", fontFamily: stackFor(value), fontSize: 15 }}
+            style={{ width: "100%", textAlign: "left", padding: "7px 9px", border: "1px solid #cbced4", borderRadius: 6, background: "none", cursor: "pointer", fontFamily: triggerStack, fontSize: 15 }}
           >
-            {current.label}
+            {triggerLabel}
           </button>
           {open && (
             <ul
               role="listbox"
               style={{ position: "absolute", zIndex: 10, top: "calc(100% + 4px)", left: 0, right: 0, margin: 0, padding: 4, listStyle: "none", maxHeight: 280, overflowY: "auto", background: "#fff", color: "#111", border: "1px solid #cbced4", borderRadius: 6, boxShadow: "0 6px 24px rgba(0,0,0,0.18)" }}
             >
-              {options.map((o) => (
-                <li key={o.value} role="option" aria-selected={o.value === value}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onChange(o.value);
-                      setOpen(false);
-                    }}
-                    style={{ width: "100%", textAlign: "left", padding: "8px 10px", border: 0, borderRadius: 4, background: o.value === value ? "#eef1f6" : "transparent", color: "#111", cursor: "pointer", fontFamily: stackFor(o.value), fontSize: 16 }}
-                  >
-                    {o.label}
-                  </button>
-                </li>
-              ))}
+              {options.map((o) => {
+                const isDefaultOption = o.value === "";
+                const optLabel = isDefaultOption ? defaultLabel : o.label;
+                const optStack = isDefaultOption ? themeStack || undefined : stackFor(o.value);
+                return (
+                  <li key={o.value} role="option" aria-selected={o.value === value}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onChange(o.value);
+                        setOpen(false);
+                      }}
+                      style={{ width: "100%", textAlign: "left", padding: "8px 10px", border: 0, borderRadius: 4, background: o.value === value ? "#eef1f6" : "transparent", color: "#111", cursor: "pointer", fontFamily: optStack, fontSize: 16 }}
+                    >
+                      {optLabel}
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>
@@ -152,13 +166,13 @@ function makeFontInput(label: string, options: Option[]) {
   };
 }
 
-export function fontField(label: string) {
+export function fontField(label: string, role: "display" | "body") {
   const options: Option[] = [
     { label: "Theme default", value: "" },
     ...Object.entries(FONTS).map(([value, f]) => ({ label: f.label, value })),
   ];
   const base = fields.select({ label, options, defaultValue: "" });
-  return { ...base, Input: makeFontInput(label, options) };
+  return { ...base, Input: makeFontInput(label, options, role) };
 }
 
 // TASK-46: theme select that publishes the selection to the theme store so the

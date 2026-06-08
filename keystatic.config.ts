@@ -360,8 +360,8 @@ export default config({
             colorMuted: optionalColor("Muted text color"),
             colorAccent: optionalColor("Accent color"),
             colorAccentContrast: optionalColor("Text on accent color"),
-            fontDisplay: fontField("Display font"),
-            fontBody: fontField("Body font"),
+            fontDisplay: fontField("Display font", "display"),
+            fontBody: fontField("Body font", "body"),
             radius: fields.number({
               label: "Corner radius (px)",
               validation: { min: 0, max: 32 },
