@@ -9,7 +9,7 @@ body {
   display: flex;
   flex-direction: column;
 }
-h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.2; }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); line-height: 1.2; }
 h1 { font-size: calc(2.4rem * var(--h1-scale, var(--heading-scale, 1))); letter-spacing: var(--h1-tracking, var(--heading-tracking, normal)); text-transform: var(--h1-transform, var(--heading-transform, none)); }
 h2 { font-size: calc(1.8rem * var(--h2-scale, var(--heading-scale, 1))); letter-spacing: var(--h2-tracking, var(--heading-tracking, normal)); text-transform: var(--h2-transform, var(--heading-transform, none)); }
 h3 { font-size: calc(1.4rem * var(--h3-scale, var(--heading-scale, 1))); letter-spacing: var(--h3-tracking, var(--heading-tracking, normal)); text-transform: var(--h3-transform, var(--heading-transform, none)); }
