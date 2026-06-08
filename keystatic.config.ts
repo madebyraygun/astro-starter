@@ -1,7 +1,7 @@
 import { config, fields, collection, singleton, type Collection } from "@keystatic/core";
 import type { ComponentSchema } from "@keystatic/core";
 import settings from "./src/data/settings.json";
-import { colorField, fontField, themeField } from "./src/keystatic/fields";
+import { colorField, fontField, themeField, headingsField } from "./src/keystatic/fields";
 
 const template: string = settings.template ?? "blog";
 const brandName: string = settings.name?.trim() || "Push Pop";
@@ -392,6 +392,7 @@ export default config({
               ],
               defaultValue: "",
             }),
+            headings: headingsField(),
           },
           { label: "Customize Design" }
         ),
