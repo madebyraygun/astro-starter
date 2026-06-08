@@ -9,7 +9,7 @@ export const prerender = true;
 
 export async function getStaticPaths() {
   const { reader } = await import("../lib/site");
-  const settings = await reader.singletons.settings.read();
+  const settings = await reader.singletons.site.read();
   const template = settings?.template ?? "blog";
   const pages = await reader.collections.pages.all();
   // The posts index is served by src/pages/posts/[...page].astro (paginated);

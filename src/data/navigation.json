@@ -1,11 +1,4 @@
 {
-  "name": "New Site",
-  "siteUrl": "",
-  "rssEnabled": true,
-  "template": "blog",
-  "theme": "paper",
-  "logo": null,
-  "logoAlign": "",
   "headerNav": [],
   "footerNav": [],
   "signup": {
@@ -15,6 +8,5 @@
     "placeholder": "Email address"
   },
   "socialLinks": [],
-  "footerText": "",
-  "design": {}
+  "footerText": ""
 }

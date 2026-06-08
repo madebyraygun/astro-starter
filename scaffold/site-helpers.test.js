@@ -60,3 +60,17 @@ test("docsSidebarItems tolerates empty inputs", () => {
   assert.deepStrictEqual(docsSidebarItems([], []), []);
   assert.deepStrictEqual(docsSidebarItems(undefined, undefined), []);
 });
+
+test("normalizeSettings works on an object merged from three singletons", () => {
+  const site = { name: "Hi-Res", siteUrl: "https://x", rssEnabled: false, template: "portfolio" };
+  const design = { theme: "dune", logo: "/l.png", logoAlign: "center", design: { colorBg: "#111" } };
+  const navigation = { headerNav: [{ label: "Work", url: "/work" }], footerText: "© Hi-Res" };
+  const s = normalizeSettings({ ...site, ...design, ...navigation });
+  assert.strictEqual(s.name, "Hi-Res");
+  assert.strictEqual(s.template, "portfolio");
+  assert.strictEqual(s.theme, "dune");
+  assert.strictEqual(s.logo, "/l.png");
+  assert.deepStrictEqual(s.design, { colorBg: "#111" });
+  assert.deepStrictEqual(s.headerNav, [{ label: "Work", url: "/work" }]);
+  assert.strictEqual(s.footerText, "© Hi-Res");
+});

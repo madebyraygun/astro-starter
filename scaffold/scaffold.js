@@ -33,10 +33,13 @@ const layer = path.join(__dirname, template);
 if (!fs.existsSync(path.join(layer, "src"))) fail(`missing template layer: ${layer}/src`);
 
 // Read everything up front so validation failures leave the tree untouched.
-const settingsPath = path.join(root, "src", "data", "settings.json");
-let settings;
+const sitePath = path.join(root, "src", "data", "site.json");
+const designPath = path.join(root, "src", "data", "design.json");
+let site;
+let design;
 try {
-  settings = JSON.parse(fs.readFileSync(settingsPath, "utf8"));
+  site = JSON.parse(fs.readFileSync(sitePath, "utf8"));
+  design = JSON.parse(fs.readFileSync(designPath, "utf8"));
 } catch (e) {
   fail(`could not read site files: ${e.message}`);
 }
@@ -53,11 +56,12 @@ if (
 try {
   // 1. Overlay the template's seed content onto src/.
   fs.cpSync(path.join(layer, "src"), path.join(root, "src"), { recursive: true });
-  // 2. Record template and theme in site settings.
-  settings.template = template;
-  settings.theme = theme;
-  if (args.name) settings.name = args.name;
-  fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + "\n");
+  // 2. Record template in site settings and theme in design settings.
+  site.template = template;
+  if (args.name) site.name = args.name;
+  design.theme = theme;
+  fs.writeFileSync(sitePath, JSON.stringify(site, null, 2) + "\n");
+  fs.writeFileSync(designPath, JSON.stringify(design, null, 2) + "\n");
   // 3. Remove the scaffold machinery from the new site.
   fs.rmSync(__dirname, { recursive: true, force: true });
 } catch (e) {

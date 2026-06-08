@@ -60,7 +60,12 @@ async function tryDraft<T>(read: () => Promise<T | null>): Promise<T | null> {
 export const reader = import.meta.env.DEV ? draftAwareReader() : realReader;
 
 export async function getSettings() {
-  return normalizeSettings(await reader.singletons.settings.read());
+  const [site, design, navigation] = await Promise.all([
+    reader.singletons.site.read(),
+    reader.singletons.design.read(),
+    reader.singletons.navigation.read(),
+  ]);
+  return normalizeSettings({ ...site, ...design, ...navigation });
 }
 
 export async function getDocsSidebar() {
