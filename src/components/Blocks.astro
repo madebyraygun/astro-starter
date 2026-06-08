@@ -5,9 +5,11 @@ import Image from "./blocks/Image.astro";
 import Gallery from "./blocks/Gallery.astro";
 import Faq from "./blocks/Faq.astro";
 import Cta from "./blocks/Cta.astro";
+import Hero from "./blocks/Hero.astro";
+import Columns from "./blocks/Columns.astro";
 
 const { blocks } = Astro.props;
-const components: Record<string, any> = { heading: Heading, text: Text, image: Image, gallery: Gallery, faq: Faq, cta: Cta };
+const components: Record<string, any> = { heading: Heading, text: Text, image: Image, gallery: Gallery, faq: Faq, cta: Cta, hero: Hero, columns: Columns };
 ---
 {(blocks ?? []).map((block: any) => {
   const Component = components[block.discriminant];

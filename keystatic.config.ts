@@ -128,6 +128,68 @@ const blocks = fields.blocks(
         background: backgroundField(),
       }),
     },
+    hero: {
+      label: "Hero",
+      schema: fields.object({
+        eyebrow: fields.text({ label: "Eyebrow (optional)" }),
+        headline: fields.text({ label: "Headline" }),
+        image: fields.image({ label: "Image", ...uploads }),
+        alt: fields.text({ label: "Alt text" }),
+        caption: fields.text({ label: "Image caption (optional)" }),
+        imagePosition: fields.select({
+          label: "Image position",
+          options: [
+            { label: "Right", value: "" },
+            { label: "Left", value: "left" },
+          ],
+          defaultValue: "",
+        }),
+        ratio: fields.select({
+          label: "Split ratio (text : image)",
+          options: [
+            { label: "50 / 50", value: "" },
+            { label: "40 / 60", value: "40-60" },
+            { label: "60 / 40", value: "60-40" },
+          ],
+          defaultValue: "",
+        }),
+        background: backgroundField(),
+      }),
+    },
+    columns: {
+      label: "Two Columns (image + text)",
+      schema: fields.object({
+        image: fields.image({ label: "Image", ...uploads }),
+        alt: fields.text({ label: "Alt text" }),
+        body: fields.text({ label: "Text", multiline: true }),
+        imagePosition: fields.select({
+          label: "Image position",
+          options: [
+            { label: "Right", value: "" },
+            { label: "Left", value: "left" },
+          ],
+          defaultValue: "",
+        }),
+        ratio: fields.select({
+          label: "Ratio (image : text)",
+          options: [
+            { label: "50 / 50", value: "" },
+            { label: "40 / 60", value: "40-60" },
+            { label: "60 / 40", value: "60-40" },
+          ],
+          defaultValue: "",
+        }),
+        verticalAlign: fields.select({
+          label: "Vertical alignment",
+          options: [
+            { label: "Center", value: "" },
+            { label: "Top", value: "top" },
+            { label: "Bottom", value: "bottom" },
+          ],
+          defaultValue: "",
+        }),
+      }),
+    },
   },
   { label: "Blocks" }
 );
