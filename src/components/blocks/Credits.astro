@@ -1,0 +1,15 @@
+---
+const { rows } = Astro.props;
+---
+<dl class="block-credits">
+  {(rows ?? []).map((row: any) => (
+    <div class="credit-row">
+      <dt>{row.label}</dt>
+      <dd>
+        {(row.items ?? []).map((item: string) => (
+          <span class="credit-item">{item}</span>
+        ))}
+      </dd>
+    </div>
+  ))}
+</dl>

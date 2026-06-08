@@ -7,9 +7,10 @@ import Faq from "./blocks/Faq.astro";
 import Cta from "./blocks/Cta.astro";
 import Hero from "./blocks/Hero.astro";
 import Columns from "./blocks/Columns.astro";
+import Credits from "./blocks/Credits.astro";
 
 const { blocks } = Astro.props;
-const components: Record<string, any> = { heading: Heading, text: Text, image: Image, gallery: Gallery, faq: Faq, cta: Cta, hero: Hero, columns: Columns };
+const components: Record<string, any> = { heading: Heading, text: Text, image: Image, gallery: Gallery, faq: Faq, cta: Cta, hero: Hero, columns: Columns, credits: Credits };
 ---
 {(blocks ?? []).map((block: any) => {
   const Component = components[block.discriminant];

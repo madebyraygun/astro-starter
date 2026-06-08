@@ -190,6 +190,21 @@ const blocks = fields.blocks(
         }),
       }),
     },
+    credits: {
+      label: "Credits / Metadata",
+      schema: fields.object({
+        rows: fields.array(
+          fields.object({
+            label: fields.text({ label: "Label" }),
+            items: fields.array(fields.text({ label: "Item" }), {
+              label: "Items",
+              itemLabel: (props) => props.value || "Item",
+            }),
+          }),
+          { label: "Rows", itemLabel: (props) => props.fields.label.value || "Row" }
+        ),
+      }),
+    },
   },
   { label: "Blocks" }
 );
