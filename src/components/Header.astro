@@ -1,12 +1,19 @@
 ---
-const { site, nav, currentPath } = Astro.props;
+import Picture from "./Picture.astro";
+const { site, currentPath } = Astro.props;
+const align = site.logoAlign ? `brand-${site.logoAlign}` : "";
 ---
-<header class="site-header">
-  <a class="site-name" href="/">{site.name}</a>
-  <nav>
-    {nav.map((item: any) => (
-      <a href={item.url} aria-current={item.url === currentPath ? "page" : undefined}>{item.title}</a>
-    ))}
-    {site.extraLinks.map((link: any) => <a href={link.url}>{link.label}</a>)}
-  </nav>
+<header class:list={["site-header", align]}>
+  <a class="site-brand" href="/" aria-label={site.name}>
+    {site.logo
+      ? <Picture src={site.logo} alt={site.name} widths={[120, 240, 480]} sizes="200px" />
+      : <span class="site-name">{site.name}</span>}
+  </a>
+  {site.headerNav.length > 0 && (
+    <nav>
+      {site.headerNav.map((link: any) => (
+        <a href={link.url} aria-current={link.url === currentPath ? "page" : undefined}>{link.label}</a>
+      ))}
+    </nav>
+  )}
 </header>
