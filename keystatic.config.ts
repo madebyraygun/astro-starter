@@ -310,14 +310,56 @@ export default config({
           ],
           defaultValue: "paper",
         }),
-        extraLinks: fields.array(
+        logo: fields.image({ label: "Logo", ...uploads }),
+        logoAlign: fields.select({
+          label: "Logo alignment",
+          options: [
+            { label: "Left", value: "" },
+            { label: "Center", value: "center" },
+            { label: "Right", value: "right" },
+          ],
+          defaultValue: "",
+        }),
+        headerNav: fields.array(
           fields.object({
             label: fields.text({ label: "Label" }),
             url: fields.text({ label: "URL" }),
           }),
-          { label: "Extra navigation links", itemLabel: (props) => props.fields.label.value }
+          { label: "Header menu", itemLabel: (props) => props.fields.label.value }
         ),
-        footerText: fields.text({ label: "Footer text" }),
+        footerNav: fields.array(
+          fields.object({
+            label: fields.text({ label: "Label" }),
+            url: fields.text({ label: "URL" }),
+          }),
+          { label: "Footer menu", itemLabel: (props) => props.fields.label.value }
+        ),
+        signup: fields.object(
+          {
+            heading: fields.text({ label: "Signup heading" }),
+            actionUrl: fields.text({
+              label: "Signup form action URL",
+              description:
+                "POST endpoint from your email provider (Mailchimp, Buttondown, etc.). Leave empty to hide the form.",
+            }),
+            buttonLabel: fields.text({ label: "Button label", defaultValue: "Sign up" }),
+            placeholder: fields.text({ label: "Email placeholder", defaultValue: "Email address" }),
+          },
+          { label: "Email signup" }
+        ),
+        socialLinks: fields.array(
+          fields.object({
+            label: fields.text({ label: "Label" }),
+            url: fields.text({ label: "URL" }),
+          }),
+          { label: "Social links", itemLabel: (props) => props.fields.label.value }
+        ),
+        footerText: fields.text({
+          label: "Footer credit line",
+          description:
+            "Supports Markdown, e.g. ©2026 Hi-Res — a project of [Raygun](https://…).",
+          multiline: true,
+        }),
         design: fields.object(
           {
             colorBg: optionalColor("Background color"),
