@@ -1,6 +1,9 @@
 import React from "react";
 import { fields } from "@keystatic/core";
 import catalog from "../data/fontCatalog.json";
+import { setTheme, useThemeTokens } from "./themeStore";
+// @ts-ignore - framework-free JS helper
+import { firstFamily } from "../../lib/theme-tokens.js";
 
 // Custom Keystatic admin fields. Each spreads a base text/select field (keeping
 // Keystatic's string parse/serialize/reader plumbing) and overrides only the
@@ -32,10 +35,17 @@ function FieldShell({
   );
 }
 
-// TASK-44: color token field — native swatch + hex text. Empty = theme default.
-function makeColorInput(label: string, description?: string) {
+// TASK-44/46: color token field — native swatch + hex text. Empty shows the
+// active theme's color for `cssVar` (TASK-46); the stored value stays empty.
+function makeColorInput(label: string, description: string, cssVar: string) {
   return function ColorInput({ value, onChange, autoFocus }: InputProps) {
-    const swatch = HEX.test(value) ? value : "#000000";
+    const tokens = useThemeTokens();
+    const themeColor = tokens?.[cssVar];
+    const swatch = HEX.test(value)
+      ? value
+      : themeColor && HEX.test(themeColor)
+        ? themeColor
+        : "#000000";
     return (
       <FieldShell label={label} description={description}>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -66,10 +76,10 @@ function makeColorInput(label: string, description?: string) {
   };
 }
 
-export function colorField(label: string) {
+export function colorField(label: string, cssVar: string) {
   const description = "Hex color, e.g. #336699. Leave empty for the theme default.";
   const base = fields.text({ label, description });
-  return { ...base, Input: makeColorInput(label, description) };
+  return { ...base, Input: makeColorInput(label, description, cssVar) };
 }
 
 // TASK-43: font picker that renders each option in its own typeface.
@@ -96,10 +106,11 @@ function ensureAdminFonts() {
 
 const stackFor = (value: string) => (value && FONTS[value] ? FONTS[value].stack : undefined);
 
-function makeFontInput(label: string, options: Option[]) {
+function makeFontInput(label: string, options: Option[], role: "display" | "body") {
   return function FontInput({ value, onChange }: InputProps) {
     const [open, setOpen] = React.useState(false);
     const ref = React.useRef<HTMLDivElement>(null);
+    const tokens = useThemeTokens();
     React.useEffect(() => {
       ensureAdminFonts();
     }, []);
@@ -111,7 +122,13 @@ function makeFontInput(label: string, options: Option[]) {
       document.addEventListener("mousedown", onDown);
       return () => document.removeEventListener("mousedown", onDown);
     }, [open]);
-    const current = options.find((o) => o.value === value) ?? options[0];
+
+    const themeStack = tokens?.[`--font-${role}`];
+    const themeFamily = firstFamily(themeStack ?? "");
+    const defaultLabel = themeFamily ? `${themeFamily} (theme default)` : "Theme default";
+    const triggerLabel = value ? (options.find((o) => o.value === value)?.label ?? value) : defaultLabel;
+    const triggerStack = value ? stackFor(value) : themeStack || undefined;
+
     return (
       <FieldShell label={label}>
         <div ref={ref} style={{ position: "relative", maxWidth: 360 }}>
@@ -120,29 +137,34 @@ function makeFontInput(label: string, options: Option[]) {
             aria-haspopup="listbox"
             aria-expanded={open}
             onClick={() => setOpen((o) => !o)}
-            style={{ width: "100%", textAlign: "left", padding: "7px 9px", border: "1px solid #cbced4", borderRadius: 6, background: "none", cursor: "pointer", fontFamily: stackFor(value), fontSize: 15 }}
+            style={{ width: "100%", textAlign: "left", padding: "7px 9px", border: "1px solid #cbced4", borderRadius: 6, background: "none", cursor: "pointer", fontFamily: triggerStack, fontSize: 15 }}
           >
-            {current.label}
+            {triggerLabel}
           </button>
           {open && (
             <ul
               role="listbox"
               style={{ position: "absolute", zIndex: 10, top: "calc(100% + 4px)", left: 0, right: 0, margin: 0, padding: 4, listStyle: "none", maxHeight: 280, overflowY: "auto", background: "#fff", color: "#111", border: "1px solid #cbced4", borderRadius: 6, boxShadow: "0 6px 24px rgba(0,0,0,0.18)" }}
             >
-              {options.map((o) => (
-                <li key={o.value} role="option" aria-selected={o.value === value}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onChange(o.value);
-                      setOpen(false);
-                    }}
-                    style={{ width: "100%", textAlign: "left", padding: "8px 10px", border: 0, borderRadius: 4, background: o.value === value ? "#eef1f6" : "transparent", color: "#111", cursor: "pointer", fontFamily: stackFor(o.value), fontSize: 16 }}
-                  >
-                    {o.label}
-                  </button>
-                </li>
-              ))}
+              {options.map((o) => {
+                const isDefaultOption = o.value === "";
+                const optLabel = isDefaultOption ? defaultLabel : o.label;
+                const optStack = isDefaultOption ? themeStack || undefined : stackFor(o.value);
+                return (
+                  <li key={o.value} role="option" aria-selected={o.value === value}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onChange(o.value);
+                        setOpen(false);
+                      }}
+                      style={{ width: "100%", textAlign: "left", padding: "8px 10px", border: 0, borderRadius: 4, background: o.value === value ? "#eef1f6" : "transparent", color: "#111", cursor: "pointer", fontFamily: optStack, fontSize: 16 }}
+                    >
+                      {optLabel}
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>
@@ -151,11 +173,46 @@ function makeFontInput(label: string, options: Option[]) {
   };
 }
 
-export function fontField(label: string) {
+export function fontField(label: string, role: "display" | "body") {
   const options: Option[] = [
     { label: "Theme default", value: "" },
     ...Object.entries(FONTS).map(([value, f]) => ({ label: f.label, value })),
   ];
   const base = fields.select({ label, options, defaultValue: "" });
-  return { ...base, Input: makeFontInput(label, options) };
+  return { ...base, Input: makeFontInput(label, options, role) };
+}
+
+// TASK-46: theme select that publishes the selection to the theme store so the
+// color/font fields can preview the active theme's defaults. Native <select>
+// (plain-text options render fine in WebKit; only per-option font styling does not).
+const THEME_OPTIONS: Option[] = [
+  { label: "Paper", value: "paper" },
+  { label: "Signal", value: "signal" },
+  { label: "Carbon", value: "carbon" },
+  { label: "Dune", value: "dune" },
+];
+
+function ThemeInput({ value, onChange }: InputProps) {
+  React.useEffect(() => {
+    setTheme(value);
+  }, [value]);
+  return (
+    <FieldShell label="Theme">
+      <select
+        aria-label="Theme"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        style={{ maxWidth: 360, padding: "7px 9px", border: "1px solid #cbced4", borderRadius: 6 }}
+      >
+        {THEME_OPTIONS.map((o) => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
+    </FieldShell>
+  );
+}
+
+export function themeField() {
+  const base = fields.select({ label: "Theme", options: THEME_OPTIONS, defaultValue: "paper" });
+  return { ...base, Input: ThemeInput };
 }
