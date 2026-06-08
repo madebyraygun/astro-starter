@@ -216,3 +216,104 @@ export function themeField() {
   const base = fields.select({ label: "Theme", options: THEME_OPTIONS, defaultValue: "paper" });
   return { ...base, Input: ThemeInput };
 }
+
+const HEADING_SIZES: { group: string; items: { id: string; label: string }[] }[] = [
+  {
+    group: "Variants (block headings)",
+    items: [
+      { id: "display", label: "Display" },
+      { id: "heading", label: "Heading" },
+      { id: "eyebrow", label: "Eyebrow" },
+    ],
+  },
+  {
+    group: "Levels (prose headings)",
+    items: [
+      { id: "h1", label: "h1" },
+      { id: "h2", label: "h2" },
+      { id: "h3", label: "h3" },
+      { id: "h4", label: "h4" },
+      { id: "h5", label: "h5" },
+      { id: "h6", label: "h6" },
+    ],
+  },
+];
+
+type HeadingData = Record<string, Record<string, string>>;
+
+function parseHeadings(value: string): HeadingData {
+  if (!value) return {};
+  try {
+    const o = JSON.parse(value);
+    return o && typeof o === "object" ? o : {};
+  } catch {
+    return {};
+  }
+}
+
+function serializeHeadings(data: HeadingData): string {
+  const out: HeadingData = {};
+  for (const [size, props] of Object.entries(data)) {
+    const kept: Record<string, string> = {};
+    for (const [k, v] of Object.entries(props || {})) if (v) kept[k] = v;
+    if (Object.keys(kept).length) out[size] = kept;
+  }
+  return Object.keys(out).length ? JSON.stringify(out) : "";
+}
+
+function HeadingsInput({ value, onChange }: InputProps) {
+  const data = parseHeadings(value);
+  const update = (id: string, prop: string, v: string) => {
+    const next: HeadingData = { ...data, [id]: { ...(data[id] || {}), [prop]: v } };
+    onChange(serializeHeadings(next));
+  };
+  const cell = { padding: "4px 6px", border: "1px solid #cbced4", borderRadius: 4 } as const;
+  const col = { display: "flex", flexDirection: "column", fontSize: 12, gap: 2 } as const;
+  return (
+    <FieldShell
+      label="Per-size heading overrides"
+      description="Override scale / letter-spacing / case for a specific heading size. Empty inherits the defaults above, then the theme."
+    >
+      {HEADING_SIZES.map((group) => (
+        <div key={group.group} style={{ marginBottom: 8 }}>
+          <p style={{ fontSize: 12, fontWeight: 600, opacity: 0.7, margin: "8px 0 4px" }}>{group.group}</p>
+          {group.items.map((item) => {
+            const g = data[item.id] || {};
+            const active = Boolean(g.scale || g.tracking || g.transform);
+            return (
+              <details key={item.id} open={active} style={{ border: "1px solid #cbced4", borderRadius: 6, padding: "6px 10px", marginBottom: 4 }}>
+                <summary style={{ cursor: "pointer", fontWeight: 600 }}>
+                  {item.label}
+                  {active ? " •" : ""}
+                </summary>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
+                  <label style={col}>
+                    Scale
+                    <input type="number" step="0.05" value={g.scale ?? ""} onChange={(e) => update(item.id, "scale", e.target.value)} style={cell} />
+                  </label>
+                  <label style={col}>
+                    Tracking (em)
+                    <input type="number" step="0.01" value={g.tracking ?? ""} onChange={(e) => update(item.id, "tracking", e.target.value)} style={cell} />
+                  </label>
+                  <label style={col}>
+                    Case
+                    <select value={g.transform ?? ""} onChange={(e) => update(item.id, "transform", e.target.value)} style={cell}>
+                      <option value="">Default</option>
+                      <option value="none">None</option>
+                      <option value="uppercase">Uppercase</option>
+                    </select>
+                  </label>
+                </div>
+              </details>
+            );
+          })}
+        </div>
+      ))}
+    </FieldShell>
+  );
+}
+
+export function headingsField() {
+  const base = fields.text({ label: "Per-size heading overrides" });
+  return { ...base, Input: HeadingsInput };
+}
