@@ -1,5 +1,7 @@
 import { createReader } from "@keystatic/core/reader";
 import keystaticConfig from "../../keystatic.config";
+// @ts-ignore
+import { normalizeSettings, docsSidebarItems } from "../../lib/site-helpers.js";
 
 const realReader = createReader(process.cwd(), keystaticConfig);
 
@@ -58,27 +60,11 @@ async function tryDraft<T>(read: () => Promise<T | null>): Promise<T | null> {
 export const reader = import.meta.env.DEV ? draftAwareReader() : realReader;
 
 export async function getSettings() {
-  const s = await reader.singletons.settings.read();
-  return {
-    name: s?.name || "New Site",
-    template: s?.template || "blog",
-    theme: s?.theme || "paper",
-    extraLinks: s?.extraLinks ?? [],
-    footerText: s?.footerText || "",
-    siteUrl: s?.siteUrl?.trim() || "",
-    rssEnabled: s?.rssEnabled ?? true,
-    design: (s?.design ?? {}) as Record<string, unknown>,
-  };
+  return normalizeSettings(await reader.singletons.settings.read());
 }
 
-export async function getNavPages() {
+export async function getDocsSidebar() {
   const pages = await reader.collections.pages.all();
-  return pages
-    .filter((p) => p.entry.navShow !== false)
-    .sort((a, b) => (a.entry.navOrder ?? 99) - (b.entry.navOrder ?? 99))
-    .map((p) => ({
-      slug: p.slug,
-      title: p.entry.title,
-      url: p.slug === "home" ? "/" : `/${p.slug}/`,
-    }));
+  const docs = (await (reader.collections as any).docs?.all()) ?? [];
+  return docsSidebarItems(pages, docs);
 }
