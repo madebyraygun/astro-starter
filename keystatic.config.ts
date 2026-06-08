@@ -75,6 +75,16 @@ const blocks = fields.blocks(
         body: fields.text({ label: "Body", multiline: true }),
         align: alignField(),
         background: backgroundField(),
+        width: fields.select({
+          label: "Width",
+          options: [
+            { label: "Full", value: "" },
+            { label: "75%", value: "75" },
+            { label: "66%", value: "66" },
+            { label: "50%", value: "50" },
+          ],
+          defaultValue: "",
+        }),
       }),
     },
     image: {
