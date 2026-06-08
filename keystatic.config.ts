@@ -1,7 +1,7 @@
 import { config, fields, collection, singleton, type Collection } from "@keystatic/core";
 import type { ComponentSchema } from "@keystatic/core";
 import settings from "./src/data/settings.json";
-import { colorField, fontField } from "./src/keystatic/fields";
+import { colorField, fontField, themeField } from "./src/keystatic/fields";
 
 const template: string = settings.template ?? "blog";
 const brandName: string = settings.name?.trim() || "Push Pop";
@@ -301,16 +301,7 @@ export default config({
           defaultValue: true,
         }),
         template: fields.text({ label: "Template" }),
-        theme: fields.select({
-          label: "Theme",
-          options: [
-            { label: "Paper", value: "paper" },
-            { label: "Signal", value: "signal" },
-            { label: "Carbon", value: "carbon" },
-            { label: "Dune", value: "dune" },
-          ],
-          defaultValue: "paper",
-        }),
+        theme: themeField(),
         logo: fields.image({ label: "Logo", ...uploads }),
         logoAlign: fields.select({
           label: "Logo alignment",

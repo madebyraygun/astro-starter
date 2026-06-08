@@ -1,6 +1,7 @@
 import React from "react";
 import { fields } from "@keystatic/core";
 import catalog from "../data/fontCatalog.json";
+import { setTheme, useThemeTokens } from "./themeStore";
 
 // Custom Keystatic admin fields. Each spreads a base text/select field (keeping
 // Keystatic's string parse/serialize/reader plumbing) and overrides only the
@@ -158,4 +159,39 @@ export function fontField(label: string) {
   ];
   const base = fields.select({ label, options, defaultValue: "" });
   return { ...base, Input: makeFontInput(label, options) };
+}
+
+// TASK-46: theme select that publishes the selection to the theme store so the
+// color/font fields can preview the active theme's defaults. Native <select>
+// (plain-text options render fine in WebKit; only per-option font styling does not).
+const THEME_OPTIONS: Option[] = [
+  { label: "Paper", value: "paper" },
+  { label: "Signal", value: "signal" },
+  { label: "Carbon", value: "carbon" },
+  { label: "Dune", value: "dune" },
+];
+
+function ThemeInput({ value, onChange }: InputProps) {
+  React.useEffect(() => {
+    setTheme(value);
+  }, [value]);
+  return (
+    <FieldShell label="Theme">
+      <select
+        aria-label="Theme"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        style={{ maxWidth: 360, padding: "7px 9px", border: "1px solid #cbced4", borderRadius: 6 }}
+      >
+        {THEME_OPTIONS.map((o) => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
+    </FieldShell>
+  );
+}
+
+export function themeField() {
+  const base = fields.select({ label: "Theme", options: THEME_OPTIONS, defaultValue: "paper" });
+  return { ...base, Input: ThemeInput };
 }
