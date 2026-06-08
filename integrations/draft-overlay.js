@@ -62,9 +62,13 @@ export default function draftOverlay() {
   };
 }
 
-// Drafts may only land inside the overlay's content mirror.
-function safeDraftPath(relative) {
-  if (typeof relative !== "string" || !relative.startsWith("src/content/")) return null;
+// Drafts may only land inside the overlay's content mirror or be the site
+// settings singleton (so design-token edits live-preview pre-save).
+const SETTINGS_DRAFT_PATH = "src/data/settings.json";
+export function safeDraftPath(relative) {
+  if (typeof relative !== "string") return null;
+  const allowed = relative.startsWith("src/content/") || relative === SETTINGS_DRAFT_PATH;
+  if (!allowed) return null;
   const target = path.resolve(DRAFT_ROOT, relative);
   return target.startsWith(path.resolve(DRAFT_ROOT) + path.sep) ? target : null;
 }

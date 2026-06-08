@@ -1,21 +1,12 @@
 import { config, fields, collection, singleton, type Collection } from "@keystatic/core";
 import type { ComponentSchema } from "@keystatic/core";
-import catalog from "./src/data/fontCatalog.json";
 import settings from "./src/data/settings.json";
+import { colorField, fontField } from "./src/keystatic/fields";
 
 const template: string = settings.template ?? "blog";
 const brandName: string = settings.name?.trim() || "Push Pop";
 
-const fontOptions = Object.entries(catalog).map(([value, family]: [string, any]) => ({
-  label: (family as { label: string }).label,
-  value,
-}));
-
-const optionalColor = (label: string) =>
-  fields.text({
-    label,
-    description: "Hex color, e.g. #336699. Leave empty for the theme default.",
-  });
+const optionalColor = colorField;
 
 const alignField = () =>
   fields.select({
@@ -378,16 +369,8 @@ export default config({
             colorMuted: optionalColor("Muted text color"),
             colorAccent: optionalColor("Accent color"),
             colorAccentContrast: optionalColor("Text on accent color"),
-            fontDisplay: fields.select({
-              label: "Display font",
-              options: [{ label: "Theme default", value: "" }, ...fontOptions],
-              defaultValue: "",
-            }),
-            fontBody: fields.select({
-              label: "Body font",
-              options: [{ label: "Theme default", value: "" }, ...fontOptions],
-              defaultValue: "",
-            }),
+            fontDisplay: fontField("Display font"),
+            fontBody: fontField("Body font"),
             radius: fields.number({
               label: "Corner radius (px)",
               validation: { min: 0, max: 32 },
