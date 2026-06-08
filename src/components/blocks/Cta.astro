@@ -1,7 +1,7 @@
 ---
-const { heading, text, label, url } = Astro.props;
+const { heading, text, label, url, background } = Astro.props;
 ---
-<section class="block-cta">
+<section class:list={["block-cta", background && `block-bg-${background}`]}>
   {heading && <h2>{heading}</h2>}
   {text && <p>{text}</p>}
   <a class="button" href={url}>{label}</a>

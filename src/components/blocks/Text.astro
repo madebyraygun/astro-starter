@@ -1,5 +1,12 @@
 ---
 import { renderMarkdown } from "../../lib/markdown";
-const { body } = Astro.props;
+const { body, align, background } = Astro.props;
 ---
-<div class="block-text" set:html={renderMarkdown(body)} />
+<div
+  class:list={[
+    "block-text",
+    align && `align-${align}`,
+    background && `block-bg-${background}`,
+  ]}
+  set:html={renderMarkdown(body)}
+/>

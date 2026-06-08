@@ -1,5 +1,12 @@
 ---
-const { text, level } = Astro.props;
+const { text, level, style, align, background } = Astro.props;
 const Tag = level === "3" ? "h3" : "h2";
 ---
-<Tag class="block-heading">{text}</Tag>
+<Tag
+  class:list={[
+    "block-heading",
+    style && `is-${style}`,
+    align && `align-${align}`,
+    background && `block-bg-${background}`,
+  ]}
+>{text}</Tag>

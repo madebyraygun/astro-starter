@@ -17,6 +17,28 @@ const optionalColor = (label: string) =>
     description: "Hex color, e.g. #336699. Leave empty for the theme default.",
   });
 
+const alignField = () =>
+  fields.select({
+    label: "Alignment",
+    options: [
+      { label: "Left", value: "" },
+      { label: "Center", value: "center" },
+      { label: "Right", value: "right" },
+    ],
+    defaultValue: "",
+  });
+
+const backgroundField = () =>
+  fields.select({
+    label: "Background",
+    options: [
+      { label: "None", value: "" },
+      { label: "Surface", value: "surface" },
+      { label: "Accent", value: "accent" },
+    ],
+    defaultValue: "",
+  });
+
 // src/assets (not public/) so astro:assets can optimize what Keystatic stores.
 const uploads = { directory: "src/assets/uploads", publicPath: "/src/assets/uploads/" };
 
@@ -34,12 +56,25 @@ const blocks = fields.blocks(
           ],
           defaultValue: "2",
         }),
+        style: fields.select({
+          label: "Style",
+          options: [
+            { label: "Heading", value: "" },
+            { label: "Display (large)", value: "display" },
+            { label: "Eyebrow (small caps)", value: "eyebrow" },
+          ],
+          defaultValue: "",
+        }),
+        align: alignField(),
+        background: backgroundField(),
       }),
     },
     text: {
       label: "Text",
       schema: fields.object({
         body: fields.text({ label: "Body", multiline: true }),
+        align: alignField(),
+        background: backgroundField(),
       }),
     },
     image: {
@@ -90,6 +125,84 @@ const blocks = fields.blocks(
         text: fields.text({ label: "Text" }),
         label: fields.text({ label: "Button label" }),
         url: fields.text({ label: "Button URL" }),
+        background: backgroundField(),
+      }),
+    },
+    hero: {
+      label: "Hero",
+      schema: fields.object({
+        eyebrow: fields.text({ label: "Eyebrow (optional)" }),
+        headline: fields.text({ label: "Headline" }),
+        image: fields.image({ label: "Image", ...uploads }),
+        alt: fields.text({ label: "Alt text" }),
+        caption: fields.text({ label: "Image caption (optional)" }),
+        imagePosition: fields.select({
+          label: "Image position",
+          options: [
+            { label: "Right", value: "" },
+            { label: "Left", value: "left" },
+          ],
+          defaultValue: "",
+        }),
+        ratio: fields.select({
+          label: "Split ratio (text : image)",
+          options: [
+            { label: "50 / 50", value: "" },
+            { label: "40 / 60", value: "40-60" },
+            { label: "60 / 40", value: "60-40" },
+          ],
+          defaultValue: "",
+        }),
+        background: backgroundField(),
+      }),
+    },
+    columns: {
+      label: "Two Columns (image + text)",
+      schema: fields.object({
+        image: fields.image({ label: "Image", ...uploads }),
+        alt: fields.text({ label: "Alt text" }),
+        body: fields.text({ label: "Text", multiline: true }),
+        imagePosition: fields.select({
+          label: "Image position",
+          options: [
+            { label: "Right", value: "" },
+            { label: "Left", value: "left" },
+          ],
+          defaultValue: "",
+        }),
+        ratio: fields.select({
+          label: "Ratio (image : text)",
+          options: [
+            { label: "50 / 50", value: "" },
+            { label: "40 / 60", value: "40-60" },
+            { label: "60 / 40", value: "60-40" },
+          ],
+          defaultValue: "",
+        }),
+        verticalAlign: fields.select({
+          label: "Vertical alignment",
+          options: [
+            { label: "Center", value: "" },
+            { label: "Top", value: "top" },
+            { label: "Bottom", value: "bottom" },
+          ],
+          defaultValue: "",
+        }),
+      }),
+    },
+    credits: {
+      label: "Credits / Metadata",
+      schema: fields.object({
+        rows: fields.array(
+          fields.object({
+            label: fields.text({ label: "Label" }),
+            items: fields.array(fields.text({ label: "Item" }), {
+              label: "Items",
+              itemLabel: (props) => props.value || "Item",
+            }),
+          }),
+          { label: "Rows", itemLabel: (props) => props.fields.label.value || "Row" }
+        ),
       }),
     },
   },
@@ -197,14 +310,56 @@ export default config({
           ],
           defaultValue: "paper",
         }),
-        extraLinks: fields.array(
+        logo: fields.image({ label: "Logo", ...uploads }),
+        logoAlign: fields.select({
+          label: "Logo alignment",
+          options: [
+            { label: "Left", value: "" },
+            { label: "Center", value: "center" },
+            { label: "Right", value: "right" },
+          ],
+          defaultValue: "",
+        }),
+        headerNav: fields.array(
           fields.object({
             label: fields.text({ label: "Label" }),
             url: fields.text({ label: "URL" }),
           }),
-          { label: "Extra navigation links", itemLabel: (props) => props.fields.label.value }
+          { label: "Header menu", itemLabel: (props) => props.fields.label.value }
         ),
-        footerText: fields.text({ label: "Footer text" }),
+        footerNav: fields.array(
+          fields.object({
+            label: fields.text({ label: "Label" }),
+            url: fields.text({ label: "URL" }),
+          }),
+          { label: "Footer menu", itemLabel: (props) => props.fields.label.value }
+        ),
+        signup: fields.object(
+          {
+            heading: fields.text({ label: "Signup heading" }),
+            actionUrl: fields.text({
+              label: "Signup form action URL",
+              description:
+                "POST endpoint from your email provider (Mailchimp, Buttondown, etc.). Leave empty to hide the form.",
+            }),
+            buttonLabel: fields.text({ label: "Button label", defaultValue: "Sign up" }),
+            placeholder: fields.text({ label: "Email placeholder", defaultValue: "Email address" }),
+          },
+          { label: "Email signup" }
+        ),
+        socialLinks: fields.array(
+          fields.object({
+            label: fields.text({ label: "Label" }),
+            url: fields.text({ label: "URL" }),
+          }),
+          { label: "Social links", itemLabel: (props) => props.fields.label.value }
+        ),
+        footerText: fields.text({
+          label: "Footer credit line",
+          description:
+            "Supports Markdown, e.g. ©2026 Hi-Res — a project of [Raygun](https://…).",
+          multiline: true,
+        }),
         design: fields.object(
           {
             colorBg: optionalColor("Background color"),
@@ -234,6 +389,26 @@ export default config({
             contentWidth: fields.number({
               label: "Content width (rem)",
               validation: { min: 30, max: 80 },
+            }),
+            headingScale: fields.number({
+              label: "Heading size scale",
+              description:
+                "Multiplies block heading sizes. 1 = theme default; try 1.5 for large display headings.",
+              validation: { min: 0.75, max: 3 },
+            }),
+            headingTracking: fields.number({
+              label: "Heading letter-spacing (em)",
+              description: "Tracking for block headings, e.g. 0.12. Leave empty for the theme default.",
+              validation: { min: -0.05, max: 0.5 },
+            }),
+            headingTransform: fields.select({
+              label: "Heading text case",
+              options: [
+                { label: "Theme default", value: "" },
+                { label: "None", value: "none" },
+                { label: "Uppercase", value: "uppercase" },
+              ],
+              defaultValue: "",
             }),
           },
           { label: "Customize Design" }

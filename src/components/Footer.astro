@@ -1,10 +1,27 @@
 ---
-const { site, nav } = Astro.props;
+import { renderMarkdown } from "../lib/markdown";
+const { site } = Astro.props;
+const { footerNav, signup, socialLinks, footerText } = site;
 ---
 <footer class="site-footer">
-  <nav>
-    {nav.map((item: any) => <a href={item.url}>{item.title}</a>)}
-    {site.extraLinks.map((link: any) => <a href={link.url}>{link.label}</a>)}
-  </nav>
-  {site.footerText && <p>{site.footerText}</p>}
+  {footerNav.length > 0 && (
+    <nav class="footer-nav">
+      {footerNav.map((link: any) => <a href={link.url}>{link.label}</a>)}
+    </nav>
+  )}
+  {signup.actionUrl && (
+    <div class="footer-signup">
+      {signup.heading && <p class="footer-signup-heading">{signup.heading}</p>}
+      <form method="post" action={signup.actionUrl}>
+        <input type="email" name="email" required placeholder={signup.placeholder} aria-label={signup.placeholder} />
+        <button type="submit">{signup.buttonLabel}</button>
+      </form>
+    </div>
+  )}
+  {socialLinks.length > 0 && (
+    <nav class="footer-social">
+      {socialLinks.map((link: any) => <a href={link.url}>{link.label}</a>)}
+    </nav>
+  )}
+  {footerText && <div class="footer-credit" set:html={renderMarkdown(footerText)} />}
 </footer>
