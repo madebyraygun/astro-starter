@@ -35,10 +35,17 @@ function FieldShell({
   );
 }
 
-// TASK-44: color token field — native swatch + hex text. Empty = theme default.
-function makeColorInput(label: string, description?: string) {
+// TASK-44/46: color token field — native swatch + hex text. Empty shows the
+// active theme's color for `cssVar` (TASK-46); the stored value stays empty.
+function makeColorInput(label: string, description: string, cssVar: string) {
   return function ColorInput({ value, onChange, autoFocus }: InputProps) {
-    const swatch = HEX.test(value) ? value : "#000000";
+    const tokens = useThemeTokens();
+    const themeColor = tokens?.[cssVar];
+    const swatch = HEX.test(value)
+      ? value
+      : themeColor && HEX.test(themeColor)
+        ? themeColor
+        : "#000000";
     return (
       <FieldShell label={label} description={description}>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -69,10 +76,10 @@ function makeColorInput(label: string, description?: string) {
   };
 }
 
-export function colorField(label: string) {
+export function colorField(label: string, cssVar: string) {
   const description = "Hex color, e.g. #336699. Leave empty for the theme default.";
   const base = fields.text({ label, description });
-  return { ...base, Input: makeColorInput(label, description) };
+  return { ...base, Input: makeColorInput(label, description, cssVar) };
 }
 
 // TASK-43: font picker that renders each option in its own typeface.

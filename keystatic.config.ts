@@ -6,8 +6,6 @@ import { colorField, fontField, themeField } from "./src/keystatic/fields";
 const template: string = settings.template ?? "blog";
 const brandName: string = settings.name?.trim() || "Push Pop";
 
-const optionalColor = colorField;
-
 const alignField = () =>
   fields.select({
     label: "Alignment",
@@ -354,12 +352,12 @@ export default config({
         }),
         design: fields.object(
           {
-            colorBg: optionalColor("Background color"),
-            colorSurface: optionalColor("Surface color"),
-            colorText: optionalColor("Text color"),
-            colorMuted: optionalColor("Muted text color"),
-            colorAccent: optionalColor("Accent color"),
-            colorAccentContrast: optionalColor("Text on accent color"),
+            colorBg: colorField("Background color", "--color-bg"),
+            colorSurface: colorField("Surface color", "--color-surface"),
+            colorText: colorField("Text color", "--color-text"),
+            colorMuted: colorField("Muted text color", "--color-muted"),
+            colorAccent: colorField("Accent color", "--color-accent"),
+            colorAccentContrast: colorField("Text on accent color", "--color-accent-contrast"),
             fontDisplay: fontField("Display font", "display"),
             fontBody: fontField("Body font", "body"),
             radius: fields.number({
