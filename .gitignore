@@ -22,4 +22,5 @@ deploy.env
 .DS_Store
 
 # push pop drafts (dev-only)
-.pushpop/
+.pushpop/*
+!.pushpop/agent.md
