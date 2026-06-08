@@ -1,14 +1,13 @@
 ---
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { getSettings, getNavPages } from "../lib/site";
+import { getSettings } from "../lib/site";
 // @ts-ignore
 import { designOverridesCss } from "../../lib/design-overrides.js";
 import fs from "node:fs";
 
 const { title } = Astro.props;
 const site = await getSettings();
-const nav = await getNavPages();
 const catalog = JSON.parse(fs.readFileSync("src/data/fontCatalog.json", "utf8"));
 const overridesCss = designOverridesCss(site.design, catalog);
 // RSS feed is emitted at /posts/rss.xml only when enabled and a Site URL is set
@@ -35,8 +34,8 @@ const rssEnabled = site.rssEnabled && Boolean(site.siteUrl) && site.template ===
     )}
   </head>
   <body>
-    <Header site={site} nav={nav} currentPath={Astro.url.pathname} />
+    <Header site={site} currentPath={Astro.url.pathname} />
     <main><slot /></main>
-    <Footer site={site} nav={nav} />
+    <Footer site={site} />
   </body>
 </html>

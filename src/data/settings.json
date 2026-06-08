@@ -4,7 +4,17 @@
   "rssEnabled": true,
   "template": "blog",
   "theme": "paper",
-  "extraLinks": [],
+  "logo": null,
+  "logoAlign": "",
+  "headerNav": [],
+  "footerNav": [],
+  "signup": {
+    "heading": "",
+    "actionUrl": "",
+    "buttonLabel": "Sign up",
+    "placeholder": "Email address"
+  },
+  "socialLinks": [],
   "footerText": "",
   "design": {}
 }

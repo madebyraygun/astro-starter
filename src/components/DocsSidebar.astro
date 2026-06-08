@@ -1,14 +1,12 @@
 ---
-import { reader } from "../lib/site";
+import { getDocsSidebar } from "../lib/site";
 const { currentPath } = Astro.props;
-const docs = ((await (reader.collections as any).docs?.all()) ?? [])
-  .sort((a: any, b: any) => (a.entry.order ?? 99) - (b.entry.order ?? 99));
+const items = await getDocsSidebar();
 ---
 <aside class="docs-sidebar">
   <ul>
-    {docs.map((d: any) => {
-      const url = `/docs/${d.slug}/`;
-      return <li><a href={url} aria-current={url === currentPath ? "page" : undefined}>{d.entry.title}</a></li>;
-    })}
+    {items.map((item: any) => (
+      <li><a href={item.url} aria-current={item.url === currentPath ? "page" : undefined}>{item.title}</a></li>
+    ))}
   </ul>
 </aside>
