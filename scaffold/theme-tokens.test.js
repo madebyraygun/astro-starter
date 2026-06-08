@@ -24,3 +24,10 @@ test("firstFamily strips quotes and trailing stack", () => {
   assert.strictEqual(firstFamily(""), "");
   assert.strictEqual(firstFamily(undefined), "");
 });
+
+test("parseThemeCss ignores commented-out declarations and strips !important", () => {
+  const css = ':root { /* --color-bg: red; */ --color-text: #111 !important; }';
+  const t = parseThemeCss(css);
+  assert.strictEqual(t["--color-bg"], undefined);
+  assert.strictEqual(t["--color-text"], "#111");
+});
