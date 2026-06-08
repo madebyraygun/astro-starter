@@ -65,6 +65,10 @@ main { max-width: var(--content-width); margin: 0 auto; padding: calc(var(--spac
   font-weight: 600;
 }
 .block-text :first-child { margin-top: 0; }
+/* Text width as a fraction of the baseline content width; centered in the content area */
+.block-text.width-75 { max-width: calc(var(--content-width) * 0.75); margin-inline: auto; }
+.block-text.width-66 { max-width: calc(var(--content-width) * 0.66); margin-inline: auto; }
+.block-text.width-50 { max-width: calc(var(--content-width) * 0.5); margin-inline: auto; }
 .block-image figcaption { color: var(--color-muted); font-size: 0.9rem; }
 .block-gallery { display: grid; gap: var(--space-unit); }
 .block-gallery.cols-2 { grid-template-columns: repeat(2, 1fr); }
