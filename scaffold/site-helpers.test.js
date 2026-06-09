@@ -74,3 +74,8 @@ test("normalizeSettings works on an object merged from three singletons", () => 
   assert.deepStrictEqual(s.headerNav, [{ label: "Work", url: "/work" }]);
   assert.strictEqual(s.footerText, "© Hi-Res");
 });
+
+test("normalizeSettings exposes footerBackground (default empty, passthrough)", () => {
+  assert.strictEqual(normalizeSettings(null).footerBackground, "");
+  assert.strictEqual(normalizeSettings({ footerBackground: "inverted" }).footerBackground, "inverted");
+});

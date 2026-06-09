@@ -8,5 +8,6 @@
     "placeholder": "Email address"
   },
   "socialLinks": [],
-  "footerText": ""
+  "footerText": "",
+  "footerBackground": ""
 }

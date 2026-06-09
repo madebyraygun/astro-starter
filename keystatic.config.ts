@@ -410,6 +410,16 @@ export default config({
             "Supports Markdown, e.g. ©2026 Hi-Res — a project of [Raygun](https://…).",
           multiline: true,
         }),
+        footerBackground: fields.select({
+          label: "Footer background",
+          options: [
+            { label: "None", value: "" },
+            { label: "Surface", value: "surface" },
+            { label: "Accent", value: "accent" },
+            { label: "Inverted (dark)", value: "inverted" },
+          ],
+          defaultValue: "",
+        }),
       },
     }),
   },
