@@ -55,6 +55,47 @@ main { max-width: var(--content-width); margin: 0 auto; padding: calc(var(--spac
 .site-header nav a[aria-current="page"] { color: var(--color-accent); }
 .site-footer { border-top: 1px solid var(--color-surface); margin-top: calc(var(--space-unit) * 2); font-size: 0.9rem; color: var(--color-muted); }
 
+/* Footer background bands (TASK-51). Default: .footer-inner is layout-transparent
+   so the footer renders exactly as the rules above. With a band, the footer goes
+   full-bleed and .footer-inner becomes the centered content container. */
+.footer-inner { display: contents; }
+.site-footer.footer-bg-surface,
+.site-footer.footer-bg-accent,
+.site-footer.footer-bg-inverted {
+  display: block;
+  width: 100vw;
+  max-width: none;
+  margin: calc(var(--space-unit) * 2) 0 0 calc(50% - 50vw);
+  border-top: 0;
+  padding: calc(var(--space-unit) * 2) var(--space-unit);
+}
+.site-footer.footer-bg-surface .footer-inner,
+.site-footer.footer-bg-accent .footer-inner,
+.site-footer.footer-bg-inverted .footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-unit);
+  align-items: baseline;
+  justify-content: space-between;
+  max-width: var(--content-width);
+  margin: 0 auto;
+}
+.site-footer.footer-bg-surface { background: var(--color-surface); }
+.site-footer.footer-bg-accent { background: var(--color-accent); color: var(--color-accent-contrast); }
+.site-footer.footer-bg-inverted { background: var(--color-text); color: var(--color-bg); }
+.site-footer.footer-bg-accent .footer-nav a,
+.site-footer.footer-bg-accent .footer-social a,
+.site-footer.footer-bg-accent .footer-credit,
+.site-footer.footer-bg-accent .footer-credit a {
+  color: var(--color-accent-contrast);
+}
+.site-footer.footer-bg-inverted .footer-nav a,
+.site-footer.footer-bg-inverted .footer-social a,
+.site-footer.footer-bg-inverted .footer-credit,
+.site-footer.footer-bg-inverted .footer-credit a {
+  color: var(--color-bg);
+}
+
 /* Blocks */
 .block-heading {
   margin-top: calc(var(--space-unit) * 2);
