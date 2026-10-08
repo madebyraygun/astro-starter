@@ -18,13 +18,13 @@ h5 { font-size: calc(1rem * var(--h5-scale, var(--heading-scale, 1))); letter-sp
 h6 { font-size: calc(0.875rem * var(--h6-scale, var(--heading-scale, 1))); letter-spacing: var(--h6-tracking, var(--heading-tracking, normal)); text-transform: var(--h6-transform, var(--heading-transform, none)); }
 a { color: var(--color-accent); }
 img { max-width: 100%; height: auto; display: block; border-radius: var(--radius); }
-main { max-width: var(--content-width); margin: 0 auto; padding: calc(var(--space-unit) * 2) var(--space-unit) calc(var(--space-unit) * 4); flex: 1 0 auto; }
+main { width: 100%; max-width: var(--content-width); margin: 0 auto; padding: calc(var(--space-unit) * 2) var(--space-unit) calc(var(--space-unit) * 4); flex: 1 0 auto; }
 
 /* Header / footer */
 .site-header, .site-footer {
   display: flex; flex-wrap: wrap; gap: var(--space-unit);
   align-items: baseline; justify-content: space-between;
-  max-width: var(--content-width); margin: 0 auto;
+  width: 100%; max-width: var(--content-width); margin: 0 auto;
   padding: var(--space-unit);
 }
 .site-name { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; color: var(--color-text); text-decoration: none; }
