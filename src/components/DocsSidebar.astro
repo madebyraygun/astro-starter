@@ -2,11 +2,31 @@
 import { getDocsSidebar } from "../lib/site";
 const { currentPath } = Astro.props;
 const items = await getDocsSidebar();
+// A page can show the sidebar without being in it (a landing page linking into the docs); without
+// this the select would show the first item as if it were the current page.
+const hasCurrent = items.some((item: any) => item.url === currentPath);
 ---
 <aside class="docs-sidebar">
+  <div class="docs-sidebar-select">
+    <label for="docs-nav-select">Browse pages</label>
+    <select id="docs-nav-select" data-docs-nav>
+      {!hasCurrent && <option value="" disabled selected hidden>Jump to a page…</option>}
+      {items.map((item: any) => (
+        <option value={item.url} selected={item.url === currentPath}>{item.title}</option>
+      ))}
+    </select>
+  </div>
   <ul>
     {items.map((item: any) => (
       <li><a href={item.url} aria-current={item.url === currentPath ? "page" : undefined}>{item.title}</a></li>
     ))}
   </ul>
 </aside>
+
+<script>
+  for (const select of document.querySelectorAll<HTMLSelectElement>("[data-docs-nav]")) {
+    select.addEventListener("change", () => {
+      if (select.value) window.location.href = select.value;
+    });
+  }
+</script>

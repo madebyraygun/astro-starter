@@ -233,11 +233,21 @@ main { width: 100%; max-width: var(--content-width); margin: 0 auto; padding: ca
 .docs-sidebar a { display: block; padding: calc(var(--space-unit) * 0.25) 0; color: var(--color-text); text-decoration: none; }
 .docs-sidebar a[aria-current="page"] { color: var(--color-accent); font-weight: 700; }
 .docs-content { flex: 1; min-width: 0; }
+.docs-sidebar-select { display: none; }
+.docs-sidebar-select label { display: block; font-size: 0.9rem; color: var(--color-muted); margin-bottom: calc(var(--space-unit) * 0.25); }
+.docs-sidebar-select select {
+  width: 100%; font: inherit; color: var(--color-text); background: var(--color-surface);
+  border: 1px solid var(--color-muted); border-radius: var(--radius);
+  padding: calc(var(--space-unit) * 0.5) calc(var(--space-unit) * 0.75);
+}
 
 @media (max-width: 640px) {
   .block-gallery.cols-3, .block-gallery.cols-4 { grid-template-columns: repeat(2, 1fr); }
   .project-grid { grid-template-columns: 1fr; }
   .docs-layout { flex-direction: column; }
+  .docs-sidebar { flex: none; }
+  .docs-sidebar > ul { display: none; }
+  .docs-sidebar-select { display: block; }
 }
 
 .block-gallery a { display: block; line-height: 0; cursor: zoom-in; }
